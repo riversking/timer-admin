@@ -1,4 +1,4 @@
-import { login, logout, getUserInfo } from '@/api/user'
+import { postData } from '../../libs/fetchData'
 import { setToken, getToken } from '@/libs/util'
 
 export default {
@@ -12,20 +12,28 @@ export default {
   },
   actions: {
     // 登录
-    handleLogin ({ commit }, {userName, password}) {
-      userName = userName.trim()
-      return new Promise((resolve, reject) => {
-        login({
-          userName,
-          password
-        }).then(res => {
-          const data = res.data
-          commit('setToken', data.token)
-          resolve()
-        }).catch(err => {
-          reject(err)
+    async userLogin({commit}, obj) {
+      try {
+        let res = await postData(`/user/login`, obj).catch(err => {
+          // commit('GLOBAL_ERR', err, {root: true})
         })
-      })
+        console.log("res",res)
+        let resUserInfo
+        switch (res.status) {
+          case 200:
+            setToken(res.data.access_token)
+            commit('SET_ACCESS_TOKEN', res.data.access_token)
+            commit('SET_REFRESH_TOKEN', res.data.refresh_token)
+            commit('SET_PERMISSIONS', resUserInfo.data.data.permissions)
+            break
+          default:
+            break
+        }
+
+        return resUserInfo.data
+      } catch (error) {
+        console.log('error: ', error)
+      }
     },
     // 退出登录
     handleLogOut ({ state, commit }) {

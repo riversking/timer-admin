@@ -3,12 +3,36 @@
 </style>
 
 <template>
-  <div class="login">
+  <div class="login" @keydown.enter="handleSubmit">
     <div class="login-con">
-      <Card icon="log-in" title="欢迎登录" :bordered="false">
+      <Card :bordered="false">
+        <p slot="title">
+          <Icon type="log-in"></Icon>
+          欢迎登录
+        </p>
         <div class="form-con">
-          <login-form @on-success-valid="handleSubmit"></login-form>
-          <p class="login-tip">输入任意用户名和密码即可</p>
+          <Form ref="loginForm" :model="form" :rules="rules">
+            <FormItem prop="userName">
+              <Input ref="user-name" v-model="form.username" placeholder="请输入用户名">
+              <span slot="prepend">
+                <Icon :size="16" type="person"></Icon>
+              </span>
+              </Input>
+            </FormItem>
+            <FormItem prop="userPwd">
+              <Input type="password" v-model="form.password" placeholder="请输入密码">
+              <span slot="prepend">
+                <Icon :size="14" type="locked"></Icon>
+              </span>
+              </Input>
+            </FormItem>
+            <FormItem>
+              <Button size="large" :loading="loading" @click="handleSubmit" type="primary" long>
+                <span v-if="!loading">登录</span>
+                <span v-else>Loading...</span>
+              </Button>
+            </FormItem>
+          </Form>
         </div>
       </Card>
     </div>
@@ -16,27 +40,53 @@
 </template>
 
 <script>
-import LoginForm from '_c/login-form'
-import { mapActions } from 'vuex'
+import Cookies from 'js-cookie'
+
 export default {
-  components: {
-    LoginForm
+  data () {
+    return {
+      loading: false,
+      form: {
+        username: 'admin',
+        password: '123456',
+        code: '',
+        randomStr: ''
+      },
+      rules: {
+        username: [
+          { required: true, message: '账号不能为空', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '密码不能为空', trigger: 'blur' }
+        ]
+      }
+    }
   },
   methods: {
-    ...mapActions([
-      'handleLogin',
-      'getUserInfo'
-    ]),
     handleSubmit ({ userName, password }) {
-      this.handleLogin({ userName, password }).then(res => {
-        this.getUserInfo().then(res => {
-          this.$router.push({
-            name: this.$config.homeName
+      this.$refs.loginForm.validate((valid, opt, callback) => {
+        if (valid) {
+          this.loading = true
+          this.$store.dispatch('userLogin', { 'param': { 'username': this.form.username, 'password': this.form.password } }).then(data => {
+            console.log('data', data)
+            switch (data.code) {
+              case 200:
+                Cookies.set('user', JSON.stringify(data.data.sysUser))
+                this.$router.push({
+                  name: this.$config.homeName
+                })
+                break
+              default:
+                this.$Message.error(data.msg)
+                break
+            }
+            this.loading = false
           })
-        })
+        }
       })
     }
   }
+
 }
 </script>
 

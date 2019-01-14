@@ -1,12 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import user from './module/user'
-import app from './module/app'
+import user from './modules/user'
+import app from './modules/app'
+import role from './modules/role'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   state: {
     //
   },
@@ -14,10 +15,13 @@ export default new Vuex.Store({
     //
   },
   actions: {
-    //
+
   },
   modules: {
     user,
-    app
+    app,
+    role
   }
 })
+
+export default store

@@ -8,9 +8,9 @@ import config from '@/config'
 const { homeName } = config
 
 Vue.use(Router)
+
 const router = new Router({
-  routes,
-  mode: 'history'
+  routes: routes
 })
 const LOGIN_PAGE_NAME = 'login'
 

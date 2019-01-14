@@ -6,7 +6,7 @@ import axios from 'axios'
  */
 export let instance = axios.create({
   // baseURL: '', // 设置默认api路径
-  timeout: 10000, // 设置超时时间
+  timeout: 10000 // 设置超时时间
   // headers: { 'Authorization': 'Basic YWRtaW46OTdkYjc5MjBhMjg5NDM0MWI4NjQyZDYyOGIzYjE5MmQ=' }
 })
 
