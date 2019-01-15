@@ -40,7 +40,8 @@
 </template>
 
 <script>
-import Cookies from 'js-cookie'
+// import Cookies from 'js-cookie'
+// import { mapActions } from 'vuex'
 
 export default {
   data () {
@@ -70,10 +71,13 @@ export default {
           this.$store.dispatch('userLogin', { 'param': { 'username': this.form.username, 'password': this.form.password } }).then(data => {
             console.log('data', data)
             switch (data.code) {
-              case 200:
-                Cookies.set('user', JSON.stringify(data.data.sysUser))
-                this.$router.push({
-                  name: this.$config.homeName
+              case '0':
+                // Cookies.set('user', JSON.stringify(data.data.sysUser))
+                this.$store.dispatch('getUserInfo', data.rsp.accessToken).then(res => {
+                  console.log('ddddddddddd', res)
+                  this.$router.push({
+                    name: this.$config.homeName
+                  })
                 })
                 break
               default:

@@ -1,5 +1,6 @@
 import { postData } from '../../libs/fetchData'
-import { setToken, getToken } from '@/libs/util'
+import { setToken, getToken } from '../../libs/util'
+import { setStore } from '../../libs/store'
 
 export default {
   state: {
@@ -12,85 +13,66 @@ export default {
   },
   actions: {
     // 登录
-    async userLogin({commit}, obj) {
+    async userLogin ({ commit }, obj) {
       try {
         let res = await postData(`/user/login`, obj).catch(err => {
-          // commit('GLOBAL_ERR', err, {root: true})
+          commit('GLOBAL_ERR', err, { root: true })
         })
-        console.log("res",res)
-        let resUserInfo
+        console.log('res', res.data.rsp.accessToken)
         switch (res.status) {
           case 200:
-            setToken(res.data.access_token)
-            commit('SET_ACCESS_TOKEN', res.data.access_token)
+            setToken(res.data.rsp.accessToken)
+            commit('SET_ACCESS_TOKEN', res.data.rsp.accessToken)
             commit('SET_REFRESH_TOKEN', res.data.refresh_token)
-            commit('SET_PERMISSIONS', resUserInfo.data.data.permissions)
+            // commit('SET_PERMISSIONS', resUserInfo.data.data.permissions)
             break
           default:
             break
         }
 
-        return resUserInfo.data
+        return res.data
       } catch (error) {
         console.log('error: ', error)
       }
     },
     // 退出登录
-    handleLogOut ({ state, commit }) {
-      return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
-          commit('setToken', '')
-          commit('setAccess', [])
-          resolve()
-        }).catch(err => {
-          reject(err)
-        })
-        // 如果你的退出登录无需请求接口，则可以直接使用下面三行代码而无需使用logout调用接口
-        // commit('setToken', '')
-        // commit('setAccess', [])
-        // resolve()
-      })
-    },
+    // handleLogOut ({ state, commit }) {
+    //   return new Promise((resolve, reject) => {
+    //     logout(state.token).then(() => {
+    //       commit('setToken', '')
+    //       commit('setAccess', [])
+    //       resolve()
+    //     }).catch(err => {
+    //       reject(err)
+    //     })
+    //     // 如果你的退出登录无需请求接口，则可以直接使用下面三行代码而无需使用logout调用接口
+    //     // commit('setToken', '')
+    //     // commit('setAccess', [])
+    //     // resolve()
+    //   })
+    // },
     // 获取用户相关信息
-    getUserInfo ({ state, commit }) {
-      return new Promise((resolve, reject) => {
-        try {
-          getUserInfo(state.token).then(res => {
-            const data = res.data
-            commit('setAvator', data.avator)
-            commit('setUserName', data.name)
-            commit('setUserId', data.user_id)
-            commit('setAccess', data.access)
-            commit('setHasGetInfo', true)
-            resolve(data)
-          }).catch(err => {
-            reject(err)
-          })
-        } catch (error) {
-          reject(error)
-        }
-      })
+    getUserInfo ({ state, commit }, token) {
+      return 'success'
     }
   },
   mutations: {
-    setAvator (state, avatorPath) {
-      state.avatorImgPath = avatorPath
+    ['SET_ACCESS_TOKEN'] (state, access_token) {
+      console.log('access_token', access_token)
+      state.access_token = access_token
+      setStore({
+        name: 'access_token',
+        content: state.access_token,
+        type: 'session'
+      })
     },
-    setUserId (state, id) {
-      state.userId = id
-    },
-    setUserName (state, name) {
-      state.userName = name
-    },
-    setAccess (state, access) {
-      state.access = access
-    },
-    setToken (state, token) {
-      state.token = token
-      setToken(token)
-    },
-    setHasGetInfo (state, status) {
-      state.hasGetInfo = status
+    ['SET_REFRESH_TOKEN'] (state, rfToken) {
+      state.refresh_token = rfToken
+      setStore({
+        name: 'refresh_token',
+        content: state.refresh_token,
+        type: 'session'
+      })
     }
-  },
+  }
 }
