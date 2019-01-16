@@ -24,6 +24,7 @@ export default {
   data () {
     return {
       namespace: 'role',
+      listData: [],
       roleColumns: [
         {
           title: '序号',
@@ -101,7 +102,10 @@ export default {
         page: 1,
         pageSize: 20
       }
-      this.$store.dispatch(`${this.namespace}/getListData`, query)
+      this.$store.dispatch(`${this.namespace}/getListData`, { "param" : query })
+        .then(data => {
+          this.listData = data.rsp.records
+      })
     }
   },
   computed: {
