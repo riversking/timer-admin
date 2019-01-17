@@ -3,7 +3,17 @@
   <div>
     <Row>
       <Col span="24">
-        <Button icon="plus-round" type="primary">新增</Button>
+        <Button icon="plus-round" type="primary" @click="addModal = true">新增</Button>
+        <Modal v-model="addModal" draggable footer-hide :closable="false">
+          <p slot="header" style="color:#1e27ff">
+            <span>新增角色</span>
+          </p>
+          <Row>
+            <Col>
+              角色名称：<Input  placeholder="Enter something..."></Input>
+            </Col>
+          </Row>
+        </Modal>
       </Col>
     </Row>
     <br>
@@ -24,7 +34,7 @@ export default {
   data () {
     return {
       namespace: 'role',
-      listData: [],
+      addModal: false,
       roleColumns: [
         {
           title: '序号',
@@ -104,13 +114,16 @@ export default {
       }
       this.$store.dispatch(`${this.namespace}/getListData`, { "param" : query })
         .then(data => {
-          this.listData = data.rsp.records
+          console.log(data)
       })
+    },
+    addRole() {
+
     }
   },
   computed: {
     ...mapState({
-      // listData: state => state.usercenter.role.listData,
+      listData: state => state.role.listData,
     })
   },
   created () {

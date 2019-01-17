@@ -1,6 +1,6 @@
 import { postData } from '../../libs/fetchData'
 import { setToken, getToken } from '../../libs/util'
-import { setStore } from '../../libs/store'
+import { setStore ,getStore } from '../../libs/store'
 
 export default {
   state: {
@@ -8,7 +8,9 @@ export default {
     userId: '',
     avatorImgPath: '',
     token: getToken(),
-    access: '',
+    access_token: getStore({
+      name: 'access_token'
+    }) || '',
     hasGetInfo: false
   },
   actions: {
@@ -59,7 +61,8 @@ export default {
   mutations: {
     ['SET_ACCESS_TOKEN'] (state, access_token) {
       console.log('access_token', access_token)
-      state.access_token = access_token
+      console.log('state', state.access_token)
+      // state.access_token = access_token
       setStore({
         name: 'access_token',
         content: state.access_token,
