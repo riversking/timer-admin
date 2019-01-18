@@ -14,7 +14,11 @@ const state = {
     sortOrder: 'desc'
   },
   listData: [],
-  model: {},
+  roleModel: {
+      roleName: '',
+      roleCode: '',
+      roleDesc: '',
+  },
   widget: {},
   permission: {}
 }
@@ -43,7 +47,65 @@ const actions = {
     } catch (error) {
       console.log('error: ', error)
     }
+  },
+  async addRole({commit}, obj) {
+    try {
+      commit(mt.SET_LOADING, true)
+      let res = await postData(`${namespace}/addRole`, obj).catch(err => {
+        commit('GLOBAL_ERR', err, {root: true})
+      })
+      console.log("res.datares.datares.data", res)
+      switch (res.status) {
+        case 200:
+          break
+        default:
+          break
+      }
+      commit(mt.SET_LOADING, false)
+      return res.data
+    } catch (error) {
+      console.log('error: ', error)
+    }
+  },
+  async read({commit}, obj) {
+    try {
+      commit(mt.SET_LOADING, true)
+      let res = await postData(`${namespace}/roleDetail`, obj).catch(err => {
+        commit('GLOBAL_ERR', err, {root: true})
+      })
+      console.log("res.datares.datares.data", res)
+      switch (res.status) {
+        case 200:
+          commit(mt.SET_MODEL, res.data)
+          break
+        default:
+          break
+      }
+      commit(mt.SET_LOADING, false)
+      return res.data
+    } catch (error) {
+      console.log('error: ', error)
+    }
+  },
+  async remove({commit}, obj) {
+    try {
+      commit(mt.SET_LOADING, true)
+      let res = await postData(`${namespace}/deleteRole`, obj).catch(err => {
+        commit('GLOBAL_ERR', err, {root: true})
+      })
+      switch (res.status) {
+        case 200:
+          break
+        default:
+          break
+      }
+      commit(mt.SET_LOADING, false)
+      return res.data
+    } catch (error) {
+      console.log('error: ', error)
+    }
   }
+
 }
 
 const mutations = {
@@ -51,15 +113,15 @@ const mutations = {
     state.loading = bool
   },
   [mt.SET_LIST_DATA](state, payload) {
-    console.log("payload", payload)
     state.listData = payload.rsp.records
     state.total = parseInt(payload.total)
     // state.permission = payload.permission
-  }
-  // [mt.SET_MODEL](state, payload) {
-  //   state.model = payload
-  //   // state.widget.authList = payload.widget.authList
-  // },
+  },
+  [mt.SET_MODEL](state, payload) {
+    console.log("payload", payload)
+    state.roleModel = payload.rsp
+    // state.widget.authList = payload.widget.authList
+  },
 }
 
 export default {
