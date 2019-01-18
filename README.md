@@ -4,4 +4,4 @@ yarn 下载
 npm install -g yarn
 
 # 启动
-
+yarn run dev
