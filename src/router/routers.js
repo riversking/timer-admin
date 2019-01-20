@@ -64,7 +64,7 @@ export default [
           icon: 'md-funnel',
           title: '用户管理'
         },
-        component: () => import('@/view/user/userList.vue')
+        component: () => import('@/view/user/list.vue')
       },
       {
         path: 'role',

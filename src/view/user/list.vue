@@ -4,6 +4,34 @@
       <Row>
         <Col span="24">
           <Button icon="plus-round" type="primary" @click="showModal">新增</Button>
+          <Modal v-model="addModal" footer-hide :closable="true">
+            <p slot="header" style="color:#1e27ff">
+              <span>新增用户</span>
+            </p>
+            <Row>
+              <Col span="3">
+                用户名：
+              </Col>
+              <Col span="21">
+              <Input v-model="model.roleName" placeholder="请输入用户名" style="width: 400px" :disabled="isDisable"/>
+              </Col>
+              <Col span="24" style="margin-top: 10px">
+                密码：
+                <Input v-model="model.roleCode" placeholder="请输入密码" type="password" style="width: 400px" :disabled="isDisable"/>
+              </Col>
+              <Col span="24" style="margin-top: 10px">
+                头像：
+                <Input v-model="model.roleDesc" placeholder="请输入角色描述" style="width: 400px" :disabled="isDisable"/>
+              </Col>
+              <Col span="12" style="text-align: right;margin-top: 10px" v-show="isVisable">
+                <Button type="primary" @click="addRole()" >确定</Button>
+              </Col>
+              <Col span="12" style="text-align: left;margin-top: 10px" v-show="isVisable">
+                <Button @click="addModal = false" >取消</Button>
+              </Col>
+
+            </Row>
+          </Modal>
         </Col>
       </Row>
       <br>
@@ -20,10 +48,11 @@ import { mapState } from 'vuex'
 
 export default {
 
-  name: 'roleList',
+  name: 'userList',
   data () {
     return {
-      namespace: 'role',
+      namespace: 'user',
+      addModal: false,
       model: {
         roleName: '',
         roleCode: '',
@@ -93,6 +122,9 @@ export default {
   methods: {
     showModal () {
 
+    },
+    showModal () {
+      this.addModal = true
     }
   },
   computed: {
