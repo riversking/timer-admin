@@ -8,18 +8,18 @@
           <p slot="header" style="color:#1e27ff">
             <span>新增角色</span>
           </p>
-          <Row :gutter="8" style="text-align: center">
+          <Row :gutter="8">
             <Col span="24">
               角色名称：
-              <Input v-model="model.roleName" placeholder="请输入角色名称" style="width: 200px" :disabled="isDisable"/>
+              <Input v-model="model.roleName" placeholder="请输入角色名称" style="width: 400px" :disabled="isDisable"/>
             </Col>
             <Col span="24" style="margin-top: 10px">
               角色标识：
-              <Input v-model="model.roleCode" placeholder="请输入角色标识" style="width: 200px" :disabled="isDisable"/>
+              <Input v-model="model.roleCode" placeholder="请输入角色标识" style="width: 400px" :disabled="isDisable"/>
             </Col>
             <Col span="24" style="margin-top: 10px">
               角色描述：
-              <Input v-model="model.roleDesc" placeholder="请输入角色描述" style="width: 200px" :disabled="isDisable"/>
+              <Input v-model="model.roleDesc" placeholder="请输入角色描述" style="width: 400px" :disabled="isDisable"/>
             </Col>
               <Col span="12" style="text-align: right;margin-top: 10px" v-show="isVisable">
                 <Button type="primary" @click="addRole()" >确定</Button>
@@ -56,7 +56,7 @@ export default {
       model: {
         roleName: '',
         roleCode: '',
-        roleDesc: '',
+        roleDesc: ''
       },
       roleColumns: [
         {
@@ -111,7 +111,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.deleteRole(params.index,params.row.id)
+                    this.deleteRole(params.index, params.row.id)
                   }
                 }
               }, 'Delete')
@@ -127,38 +127,38 @@ export default {
         page: 1,
         pageSize: 20
       }
-      this.$store.dispatch(`${this.namespace}/getListData`, { "param" : query })
+      this.$store.dispatch(`${this.namespace}/getListData`, { 'param': query })
         .then(data => {
           console.log(data)
-      })
+        })
     },
-    addRole() {
+    addRole () {
       let query = {
-        "roleName": this.model.roleName,
-        "roleCode": this.model.roleCode,
-        "roleDesc": this.model.roleDesc,
+        'roleName': this.model.roleName,
+        'roleCode': this.model.roleCode,
+        'roleDesc': this.model.roleDesc
       }
-      this.$store.dispatch(`${this.namespace}/addRole`, { "param" : query })
+      this.$store.dispatch(`${this.namespace}/addRole`, { 'param': query })
         .then(data => {
           switch (data.code) {
             case '0':
-              this.$Message.success('成功!');
+              this.$Message.success('成功!')
               this.getList()
               break
             default:
-              this.$Message.error('失败!');
+              this.$Message.error('失败!')
               break
           }
         })
       this.addModal = false
-      this.model= {
-          roleName: '',
-          roleCode: '',
-          roleDesc: '',
+      this.model = {
+        roleName: '',
+        roleCode: '',
+        roleDesc: ''
       }
     },
-    getRoleDetail(id) {
-      this.$store.dispatch(`${this.namespace}/read`, { "param" : id })
+    getRoleDetail (id) {
+      this.$store.dispatch(`${this.namespace}/read`, { 'param': id })
         .then(data => {
           console.log(data)
           switch (data.code) {
@@ -167,42 +167,42 @@ export default {
               this.addModal = true
               break
             default:
-              this.$Message.error('失败!');
+              this.$Message.error('失败!')
               break
           }
         })
     },
-    deleteRole(index,id) {
-      this.$store.dispatch(`${this.namespace}/remove`, { "param" : id })
+    deleteRole (index, id) {
+      this.$store.dispatch(`${this.namespace}/remove`, { 'param': id })
         .then(data => {
           switch (data.code) {
             case '0':
               this.addModal = false
-              this.listData.splice(index, 1);
+              this.listData.splice(index, 1)
               break
             default:
-              this.$Message.error('失败!');
+              this.$Message.error('失败!')
               break
           }
         })
     },
-    showModal() {
+    showModal () {
       this.addModal = true
       this.isDisable = false
       this.isVisable = true
-      this.model= {
+      this.model = {
         roleName: '',
         roleCode: '',
-        roleDesc: '',
+        roleDesc: ''
       }
     }
   },
   computed: {
     ...mapState({
-      listData: state => state.role.listData,
+      listData: state => state.role.listData
     })
   },
-  mounted() {
+  mounted () {
 
   },
   created () {

@@ -1,6 +1,7 @@
 import { postData } from '../../libs/fetchData'
 import { setToken, getToken } from '../../libs/util'
-import { setStore ,getStore } from '../../libs/store'
+import { setStore, getStore } from '../../libs/store'
+import * as mt from '../mutation-types'
 
 export default {
   state: {
@@ -11,7 +12,8 @@ export default {
     access_token: getStore({
       name: 'access_token'
     }) || '',
-    hasGetInfo: false
+    hasGetInfo: false,
+    listData: []
   },
   actions: {
     // 登录
@@ -56,10 +58,40 @@ export default {
     // 获取用户相关信息
     getUserInfo ({ state, commit }, token) {
       return 'success'
+    },
+    async getListData ({ commit }, obj) {
+      try {
+        commit(mt.SET_LOADING, true)
+        let res = await postData(`${namespace}/userList`, obj).catch(err => {
+          commit('GLOBAL_ERR', err, { root: true })
+        })
+        console.log('res.datares.datares.data', res)
+        switch (res.status) {
+          case 200:
+            commit(mt.SET_LIST_DATA, res.data)
+            break
+          default:
+            break
+        }
+
+        commit(mt.SET_LOADING, false)
+
+        return res.data
+      } catch (error) {
+        console.log('error: ', error)
+      }
     }
   },
   mutations: {
-    ['SET_ACCESS_TOKEN'] (state, access_token) {
+    [mt.SET_LOADING] (state, bool) {
+      state.loading = bool
+    },
+    [mt.SET_LIST_DATA] (state, payload) {
+      state.listData = payload.rsp.records
+      state.total = parseInt(payload.total)
+      // state.permission = payload.permission
+    },
+    'SET_ACCESS_TOKEN' (state, access_token) {
       console.log('access_token', access_token)
       console.log('state', state.access_token)
       // state.access_token = access_token
@@ -69,7 +101,7 @@ export default {
         type: 'session'
       })
     },
-    ['SET_REFRESH_TOKEN'] (state, rfToken) {
+    'SET_REFRESH_TOKEN' (state, rfToken) {
       state.refresh_token = rfToken
       setStore({
         name: 'refresh_token',
