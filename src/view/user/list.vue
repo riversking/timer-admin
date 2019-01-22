@@ -2,37 +2,40 @@
   <Card>
     <div>
       <Row>
-        <Col span="24">
           <Button icon="plus-round" type="primary" @click="showModal">新增</Button>
           <Modal v-model="addModal" footer-hide :closable="true">
             <p slot="header" style="color:#1e27ff">
               <span>新增用户</span>
             </p>
-            <Row>
-              <Col span="3">
-                用户名：
-              </Col>
-              <Col span="21">
-              <Input v-model="model.roleName" placeholder="请输入用户名" style="width: 400px" :disabled="isDisable"/>
-              </Col>
-              <Col span="24" style="margin-top: 10px">
-                密码：
-                <Input v-model="model.roleCode" placeholder="请输入密码" type="password" style="width: 400px" :disabled="isDisable"/>
-              </Col>
-              <Col span="24" style="margin-top: 10px">
-                头像：
-                <Input v-model="model.roleDesc" placeholder="请输入角色描述" style="width: 400px" :disabled="isDisable"/>
-              </Col>
-              <Col span="12" style="text-align: right;margin-top: 10px" v-show="isVisable">
-                <Button type="primary" @click="addRole()" >确定</Button>
-              </Col>
-              <Col span="12" style="text-align: left;margin-top: 10px" v-show="isVisable">
-                <Button @click="addModal = false" >取消</Button>
-              </Col>
-
-            </Row>
+            <Form :model="formItem" :label-width="80">
+              <FormItem label="用户名：">
+                <Input v-model="formItem.userName" placeholder="请输入用户名"></Input>
+              </FormItem>
+              <FormItem label="密码：">
+                <Input v-model="formItem.password" placeholder="请输入密码" type="password"></Input>
+              </FormItem>
+              <FormItem label="手机号：">
+                <Input v-model="formItem.phone" placeholder="请输入手机号"></Input>
+              </FormItem>
+              <FormItem label="部门：">
+                <Input v-model="formItem.dept" placeholder="请输入手机号"></Input>
+              </FormItem>
+              <FormItem label="角色：">
+                <Select v-model="formItem.roleName" multiple>
+                  <Option value="beijing">New York</Option>
+                  <Option value="shanghai">London</Option>
+                  <Option value="shenzhen">Sydney</Option>
+                </Select>
+              </FormItem>
+              <FormItem label="头像：">
+                <upload/>
+              </FormItem>
+              <FormItem>
+                <Button type="primary">确认</Button>
+                <Button style="margin-left: 8px">取消</Button>
+              </FormItem>
+            </Form>
           </Modal>
-        </Col>
       </Row>
       <br>
       <Row :gutter="12">
@@ -45,18 +48,23 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-
+import  upload  from '../user/upload'
 export default {
 
   name: 'userList',
+  components: {
+    upload
+  },
   data () {
     return {
       namespace: 'user',
       addModal: false,
-      model: {
-        roleName: '',
-        roleCode: '',
-        roleDesc: ''
+      formItem: {
+        userName: '',
+        password: '',
+        phone: '',
+        dept: '',
+        roleName: ''
       },
       userColumns: [
         {
@@ -70,6 +78,10 @@ export default {
         {
           title: '手机号',
           key: 'phone'
+        },
+        {
+          title: '头像',
+          key: 'avatar'
         },
         {
           title: '角色',
@@ -136,7 +148,7 @@ export default {
 
   },
   created () {
-    this.getList()
+    // this.getList()
   }
 }
 </script>
