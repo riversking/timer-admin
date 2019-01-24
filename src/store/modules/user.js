@@ -2,7 +2,7 @@ import { postData } from '../../libs/fetchData'
 import { setToken, getToken } from '../../libs/util'
 import { setStore, getStore } from '../../libs/store'
 import * as mt from '../mutation-types'
-
+const namespace = '/user'
 export default {
   state: {
     userName: '',
@@ -80,6 +80,25 @@ export default {
       } catch (error) {
         console.log('error: ', error)
       }
+    },
+    async add ({commit}, obj) {
+      try {
+        commit(mt.SET_LOADING, true)
+        let res = await postData(`${namespace}/addUser`, obj).catch(err => {
+          commit('GLOBAL_ERR', err, {root: true})
+        })
+        console.log("res.datares.datares.data", res)
+        switch (res.status) {
+          case 200:
+            break
+          default:
+            break
+        }
+        commit(mt.SET_LOADING, false)
+        return res.data
+      } catch (error) {
+        console.log('error: ', error)
+      }
     }
   },
   mutations: {
@@ -91,7 +110,7 @@ export default {
       state.total = parseInt(payload.total)
       // state.permission = payload.permission
     },
-    'SET_ACCESS_TOKEN' (state, access_token) {
+    ['SET_ACCESS_TOKEN'] (state, access_token) {
       console.log('access_token', access_token)
       console.log('state', state.access_token)
       // state.access_token = access_token
@@ -101,7 +120,7 @@ export default {
         type: 'session'
       })
     },
-    'SET_REFRESH_TOKEN' (state, rfToken) {
+    ['SET_REFRESH_TOKEN'] (state, rfToken) {
       state.refresh_token = rfToken
       setStore({
         name: 'refresh_token',

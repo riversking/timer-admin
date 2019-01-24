@@ -14,6 +14,7 @@ const state = {
     sortOrder: 'desc'
   },
   listData: [],
+  roleList: [],
   roleModel: {
       roleName: '',
       roleCode: '',
@@ -29,10 +30,9 @@ const actions = {
   async getListData({commit}, obj) {
     try {
       commit(mt.SET_LOADING, true)
-      let res = await postData(`${namespace}/roleList`, obj).catch(err => {
+      let res = await postData(`${namespace}/rolePage`, obj).catch(err => {
         commit('GLOBAL_ERR', err, {root: true})
       })
-      console.log("res.datares.datares.data", res)
       switch (res.status) {
         case 200:
           commit(mt.SET_LIST_DATA, res.data)
@@ -57,6 +57,26 @@ const actions = {
       console.log("res.datares.datares.data", res)
       switch (res.status) {
         case 200:
+          break
+        default:
+          break
+      }
+      commit(mt.SET_LOADING, false)
+      return res.data
+    } catch (error) {
+      console.log('error: ', error)
+    }
+  },
+  async getRoleList({commit}, obj) {
+    try {
+      commit(mt.SET_LOADING, true)
+      let res = await postData(`${namespace}/roleList`, obj).catch(err => {
+        commit('GLOBAL_ERR', err, {root: true})
+      })
+      console.log("res.datares.datares.data", res)
+      switch (res.status) {
+        case 200:
+          commit("SET_ROLE_LIST", res.data)
           break
         default:
           break
@@ -122,6 +142,9 @@ const mutations = {
     state.roleModel = payload.rsp
     // state.widget.authList = payload.widget.authList
   },
+  ["SET_ROLE_LIST"](state, payload) {
+    state.roleList = payload.rsp
+  }
 }
 
 export default {
