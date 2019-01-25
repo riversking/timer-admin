@@ -9,23 +9,24 @@
           </p>
           <Form :model="formItem" :label-width="80">
             <FormItem label="用户名：">
-              <Input v-model="formItem.username" placeholder="请输入用户名"></Input>
+              <Input v-model="formItem.username" placeholder="请输入用户名" :disabled="isDisable"></Input>
             </FormItem>
-            <FormItem label="密码：">
+            <FormItem label="密码：" v-show="showCom">
               <Input v-model="formItem.password" placeholder="请输入密码" type="password"></Input>
             </FormItem>
             <FormItem label="手机号：">
-              <Input v-model="formItem.phone" placeholder="请输入手机号"></Input>
+              <Input v-model="formItem.phone" placeholder="请输入手机号" :disabled="isDisable"></Input>
             </FormItem>
             <FormItem label="角色：">
-              <Select v-model="formItem.roleIds" multiple>
+              <Select v-model="formItem.roleIds" multiple :disabled="isDisable">
                 <Option v-for="item in roleList" :value="item.id" :key="item.id">{{item.roleName}}</Option>
               </Select>
             </FormItem>
             <FormItem label="头像：">
               <div>
+                <img class="demo-upload-list" :src="'http://localhost:10500/api/v1/image/'+formItem.avatar" v-if="showImg"/>
                 <div class="demo-upload-list" v-for="item in uploadList">
-                  <template v-if="item.status === 'finished'">
+                  <template v-if="item.status === 'finished'" v-show="showCom">
                     <img :src="item.url">
                     <div class="demo-upload-list-cover">
                       <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
@@ -49,6 +50,7 @@
                   type="drag"
                   :multiple=false
                   action="/file/upload"
+                  v-show="showCom"
                   style="display: inline-block;width:58px;">
                   <div style="width: 58px;height:58px;line-height: 58px;">
                     <Icon type="ios-camera" size="20"></Icon>
@@ -60,7 +62,7 @@
                 </Modal>
               </div>
             </FormItem>
-            <FormItem>
+            <FormItem v-show="isVisable">
               <Button type="primary" @click="addUser()">确认</Button>
               <Button style="margin-left: 8px">取消</Button>
             </FormItem>
@@ -87,6 +89,10 @@
       return {
         namespace: 'user',
         addModal: false,
+        isDisable: false,
+        showCom: true,
+        showImg: false,
+        isVisable: true,
         formItem: {
           username: '',
           password: '',
@@ -239,6 +245,17 @@
       },
       showModal() {
         this.addModal = true
+        this.showCom = true
+        this.isVisable = true
+        this.isDisable = false
+        this.showImg = false
+        this.formItem = {
+          username: '',
+          password: '',
+          phone: '',
+          roleIds: [],
+          avatar: ''
+        }
       },
       addUser() {
         this.formItem.createUser = 'admin'
@@ -279,6 +296,10 @@
               case '0':
                 this.formItem = data.rsp
                 this.addModal = true
+                this.showCom = false
+                this.isVisable = false
+                this.isDisable = true
+                this.showImg = true
                 break
               default:
                 this.$Message.error('失败!')
