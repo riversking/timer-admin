@@ -56,13 +56,13 @@ export default {
     //   })
     // },
     // 获取用户相关信息
-    getUserInfo ({ state, commit }, token) {
+    getUserInfo ({ state, commit }, obj) {
       return 'success'
     },
     async getListData ({ commit }, obj) {
       try {
         commit(mt.SET_LOADING, true)
-        let res = await postData(`${namespace}/userList`, obj).catch(err => {
+        let res = await postData(`${namespace}/userPage`, obj).catch(err => {
           commit('GLOBAL_ERR', err, { root: true })
         })
         console.log('res.datares.datares.data', res)
@@ -76,6 +76,24 @@ export default {
 
         commit(mt.SET_LOADING, false)
 
+        return res.data
+      } catch (error) {
+        console.log('error: ', error)
+      }
+    },
+    async getUserById ({ state, commit }, obj) {
+      try {
+        let res = await postData(`${namespace}/getUserById`, obj).catch(err => {
+          commit('GLOBAL_ERR', err, { root: true })
+        })
+        console.log('res', res.data)
+        switch (res.status) {
+          case 200:
+
+            break
+          default:
+            break
+        }
         return res.data
       } catch (error) {
         console.log('error: ', error)

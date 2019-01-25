@@ -114,7 +114,7 @@
                     this.deleteRole(params.index, params.row.id)
                   }
                 }
-              }, 'Delete')
+              }, '删除')
             ])
           }
         }

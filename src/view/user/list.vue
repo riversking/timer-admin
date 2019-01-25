@@ -17,9 +17,6 @@
             <FormItem label="手机号：">
               <Input v-model="formItem.phone" placeholder="请输入手机号"></Input>
             </FormItem>
-            <FormItem label="部门：">
-              <Input v-model="formItem.dept" placeholder="请输入手机号"></Input>
-            </FormItem>
             <FormItem label="角色：">
               <Select v-model="formItem.roleIds" multiple>
                 <Option v-for="item in roleList" :value="item.id" :key="item.id">{{item.roleName}}</Option>
@@ -94,7 +91,6 @@
           username: '',
           password: '',
           phone: '',
-          dept: '',
           roleIds: [],
           avatar: ''
         },
@@ -105,35 +101,72 @@
         userColumns: [
           {
             title: '序号',
-            key: 'id'
+            key: 'id',
+            align: 'center',
           },
           {
             title: '用户名',
-            key: 'username'
+            key: 'username',
+            align: 'center',
           },
           {
             title: '手机号',
-            key: 'phone'
+            key: 'phone',
+            align: 'center',
           },
           {
             title: '头像',
-            key: 'avatar'
+            key: 'avatar',
+            align: 'center',
+            render: (h, params) => {
+              return h('div', [
+                h('img', {
+                  attrs: {
+                    src: "http://localhost:10500/api/v1/image/" + params.row.avatar
+                  },
+                  style: {
+                    widget: '40px',
+                    height: '40px'
+                  },
+                  on: {
+                    click: () => {
+                      // this.visible = true
+                    }
+                  }
+                },)
+              ])
+            }
           },
           {
             title: '角色',
-            key: 'roleName'
+            key: 'roleName',
+            align: 'center',
+            render: (h, params) => {
+              return h('div',
+                params.row.sysRoleModels.map(i => {
+                  return h('Tag', {
+                    style: {
+                      marginRight: '5px'
+                    },
+                  }, i.roleName)
+                })
+              )
+            }
           },
           {
             title: '创建时间',
-            key: 'createTime'
+            key: 'createTime',
+            align: 'center',
           },
           {
             title: '更新时间',
-            key: 'updateTime'
+            key: 'updateTime',
+            align: 'center',
           },
           {
             title: '操作',
             key: 'action',
+            align: 'center',
             render: (h, params) => {
               return h('div', [
                 h('Button', {
@@ -146,7 +179,7 @@
                   },
                   on: {
                     click: () => {
-
+                      this.getUserDetail(params.row.id)
                     }
                   }
                 }, '查看'),
@@ -160,7 +193,7 @@
 
                     }
                   }
-                }, 'Delete')
+                }, '删除')
               ])
             }
           }
@@ -228,6 +261,30 @@
           .then(data => {
             console.log('datadatadatadata', data)
           })
+      },
+      getList() {
+        let query = {
+          page: 1,
+          pageSize: 20
+        }
+        this.$store.dispatch(`getListData`, {'param': query})
+          .then(data => {
+            console.log('datadatadatadata', data)
+          })
+      },
+      getUserDetail(id) {
+        this.$store.dispatch(`getUserById`, {'param': id})
+          .then(data => {
+            switch (data.code) {
+              case '0':
+                this.formItem = data.rsp
+                this.addModal = true
+                break
+              default:
+                this.$Message.error('失败!')
+                break
+            }
+          })
       }
     },
     computed: {
@@ -241,7 +298,7 @@
       this.getRoleList()
     },
     created() {
-      // this.getList()
+      this.getList()
     }
   }
 </script>
