@@ -136,7 +136,8 @@
                   },
                   on: {
                     click: () => {
-                      // this.visible = true
+                      this.visible = true
+                      this.formItem.avatar =  params.row.avatar
                     }
                   }
                 },)
