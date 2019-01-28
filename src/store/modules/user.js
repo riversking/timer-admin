@@ -117,7 +117,26 @@ export default {
       } catch (error) {
         console.log('error: ', error)
       }
-    }
+    },
+    async deleteById ({commit}, obj) {
+      try {
+        commit(mt.SET_LOADING, true)
+        let res = await postData(`${namespace}/deleteUser`, obj).catch(err => {
+          commit('GLOBAL_ERR', err, {root: true})
+        })
+        console.log("res.datares.datares.data", res)
+        switch (res.status) {
+          case 200:
+            break
+          default:
+            break
+        }
+        commit(mt.SET_LOADING, false)
+        return res.data
+      } catch (error) {
+        console.log('error: ', error)
+      }
+    },
   },
   mutations: {
     [mt.SET_LOADING] (state, bool) {

@@ -2,7 +2,7 @@
   <Card>
     <div>
       <Row>
-        <Button icon="plus-round" type="primary" @click="showModal">新增</Button>
+        <Button icon="md-add" type="primary" @click="showModal">新增</Button>
         <Modal v-model="addModal" footer-hide :closable="true">
           <p slot="header" style="color:#1e27ff">
             <span>新增用户</span>
@@ -178,8 +178,9 @@
               return h('div', [
                 h('Button', {
                   props: {
-                    type: 'primary',
-                    size: 'small'
+                    type: 'info',
+                    size: 'small',
+                    icon: 'md-eye'
                   },
                   style: {
                     marginRight: '5px'
@@ -193,11 +194,12 @@
                 h('Button', {
                   props: {
                     type: 'error',
-                    size: 'small'
+                    size: 'small',
+                    icon: 'md-trash'
                   },
                   on: {
                     click: () => {
-
+                      this.deleteUser(params.index, params.row.id)
                     }
                   }
                 }, '删除')
@@ -266,13 +268,15 @@
             switch (data.code) {
               case '0':
                 this.$Message.success(data.msg)
-                // this.getList()
+                this.getList()
                 break
               default:
                 this.$Message.error(data.msg)
                 break
             }
           })
+        this.addModal = false
+        this.uploadList = []
       },
       getRoleList() {
         this.$store.dispatch(`role/getRoleList`, {'param': this.formItem})
@@ -301,6 +305,19 @@
                 this.isVisable = false
                 this.isDisable = true
                 this.showImg = true
+                break
+              default:
+                this.$Message.error('失败!')
+                break
+            }
+          })
+      },
+      deleteUser(index, id) {
+        this.$store.dispatch(`deleteById`, { 'param': id })
+          .then(data => {
+            switch (data.code) {
+              case '0':
+                this.listData.splice(index, 1)
                 break
               default:
                 this.$Message.error('失败!')
