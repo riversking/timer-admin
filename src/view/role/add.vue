@@ -1,5 +1,9 @@
 <template>
   <div>
+    <Modal v-model="addModal" footer-hide :closable="true" :on-visible-change="addModal">
+      <p slot="header">
+        <span>新增</span>
+      </p>
       <Row :gutter="8">
         <Col :span="24">
           角色名称：
@@ -17,9 +21,10 @@
           <Button type="primary" @click="addRole()">确定</Button>
         </Col>
         <Col span="12" style="text-align: left;margin-top: 10px">
-          <Button @click="addModal = false">取消</Button>
+          <Button @click="showModal()">取消</Button>
         </Col>
       </Row>
+    </Modal>
   </div>
 </template>
 <script>
@@ -28,6 +33,16 @@
   export default {
 
     name: 'addRole',
+    props: {
+      addModal: {
+        type: Boolean,
+        default: false
+      },
+      roleId: {
+        type: Number,
+        default: 0
+      }
+    },
     data() {
       return {
         namespace: 'role',
@@ -51,6 +66,7 @@
             switch (data.code) {
               case '0':
                 this.$Message.success('成功!')
+                this.$emit('refreshRoleList')
                 break
               default:
                 this.$Message.error('失败!')
@@ -58,6 +74,24 @@
             }
           })
       },
+      getRoleDetail(id) {
+        this.$store.dispatch(`${this.namespace}/read`, {'param': id})
+          .then(data => {
+            console.log(data)
+            switch (data.code) {
+              case '0':
+                this.model = data.rsp
+                this.addModal = true
+                break
+              default:
+                this.$Message.error('失败!')
+                break
+            }
+          })
+      },
+      showModal() {
+        this.$emit('refreshRoleList')
+      }
     },
     computed: {
       ...mapState({

@@ -53,7 +53,7 @@ export default [
     name: 'multilevel',
     meta: {
       icon: 'md-menu',
-      title: '多级菜单'
+      title: '系统管理'
     },
     component: Main,
     children: [

@@ -4,12 +4,7 @@
       <Row>
         <Col span="24">
           <Button icon="md-add" type="primary" @click="showModal">新增</Button>
-          <Modal v-model="addModal" footer-hide :closable="true">
-            <p slot="header">
-              <span>新增</span>
-            </p>
-            <addRole></addRole>
-          </Modal>
+          <addRole @refreshRoleList="getRefreshList" :addModal="addModal" :roleId="roleId"></addRole>
         </Col>
       </Row>
       <br>
@@ -35,6 +30,7 @@
       return {
         namespace: 'role',
         addModal: false,
+        roleId: 0,
         model: {
           roleName: '',
           roleCode: '',
@@ -82,7 +78,8 @@
                   },
                   on: {
                     click: () => {
-                      this.getRoleDetail(params.row.id)
+                      this.roleId = params.row.id
+                      this.addModal = true
                     }
                   }
                 }, '查看'),
@@ -130,21 +127,6 @@
             console.log(data)
           })
       },
-      getRoleDetail(id) {
-        this.$store.dispatch(`${this.namespace}/read`, {'param': id})
-          .then(data => {
-            console.log(data)
-            switch (data.code) {
-              case '0':
-                this.model = data.rsp
-                this.addModal = true
-                break
-              default:
-                this.$Message.error('失败!')
-                break
-            }
-          })
-      },
       deleteRole(index, id) {
         this.$store.dispatch(`${this.namespace}/remove`, {'param': id})
           .then(data => {
@@ -161,13 +143,15 @@
       },
       showModal() {
         this.addModal = true
-        this.isDisable = false
-        this.isVisable = true
         this.model = {
           roleName: '',
           roleCode: '',
           roleDesc: ''
         }
+      },
+      getRefreshList() {
+        this.getList()
+        this.addModal = false
       }
     },
     computed: {
