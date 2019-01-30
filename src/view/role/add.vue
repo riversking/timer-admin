@@ -1,6 +1,7 @@
 <template>
   <div>
-    <Modal v-model="addModal" footer-hide :closable="true" :on-visible-change="addModal">
+    <!--在子组件中用:value替代v-model-->
+    <Modal :value="addModal" footer-hide :closable="true" @on-cancel="showModal()">
       <p slot="header">
         <span>新增</span>
       </p>
@@ -66,10 +67,10 @@
             switch (data.code) {
               case '0':
                 this.$Message.success('成功!')
-                this.$emit('refreshRoleList')
+                this.$emit('refresh-role-list', data.code)
                 break
               default:
-                this.$Message.error('失败!')
+                this.$Message.error(data.msg)
                 break
             }
           })
@@ -81,7 +82,6 @@
             switch (data.code) {
               case '0':
                 this.model = data.rsp
-                this.addModal = true
                 break
               default:
                 this.$Message.error('失败!')
@@ -90,7 +90,7 @@
           })
       },
       showModal() {
-        this.$emit('refreshRoleList')
+        this.$emit('refresh', 2)
       }
     },
     computed: {

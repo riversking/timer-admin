@@ -4,7 +4,7 @@
       <Row>
         <Col span="24">
           <Button icon="md-add" type="primary" @click="showModal">新增</Button>
-          <addRole @refreshRoleList="getRefreshList" :addModal="addModal" :roleId="roleId"></addRole>
+          <addRole v-on:refresh="getRefreshList" :addModal="addModal" :roleId="roleId"></addRole>
         </Col>
       </Row>
       <br>
@@ -136,7 +136,7 @@
                 this.listData.splice(index, 1)
                 break
               default:
-                this.$Message.error('失败!')
+                this.$Message.error(data.msg)
                 break
             }
           })
@@ -149,8 +149,10 @@
           roleDesc: ''
         }
       },
-      getRefreshList() {
-        this.getList()
+      getRefreshList(item) {
+        if (item === "0") {
+          this.getList()
+        }
         this.addModal = false
       }
     },
