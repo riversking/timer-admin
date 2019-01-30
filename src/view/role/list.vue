@@ -4,7 +4,8 @@
       <Row>
         <Col span="24">
           <Button icon="md-add" type="primary" @click="showModal">新增</Button>
-          <addRole v-on:refresh="getRefreshList" :addModal="addModal" :roleId="roleId"></addRole>
+          <addRole v-on:refresh="getRefreshList" :addModal="addModal" :isDisable="isDisable" :isShow="isShow" :isEdit="isEdit"
+                   :model="model"></addRole>
         </Col>
       </Row>
       <br>
@@ -31,7 +32,11 @@
         namespace: 'role',
         addModal: false,
         roleId: 0,
+        isDisable: false,
+        isShow: true,
+        isEdit: false,
         model: {
+          id: '',
           roleName: '',
           roleCode: '',
           roleDesc: ''
@@ -65,6 +70,7 @@
             title: '操作',
             key: 'action',
             align: 'center',
+            width: 250,
             render: (h, params) => {
               return h('div', [
                 h('Button', {
@@ -78,8 +84,7 @@
                   },
                   on: {
                     click: () => {
-                      this.roleId = params.row.id
-                      this.addModal = true
+                      this.getRoleDetail(params.row.id,"view")
                     }
                   }
                 }, '查看'),
@@ -94,7 +99,7 @@
                   },
                   on: {
                     click: () => {
-                      this.getRoleDetail(params.row.id)
+                      this.getRoleDetail(params.row.id,"edit")
                     }
                   }
                 }, '编辑'),
@@ -127,6 +132,31 @@
             console.log(data)
           })
       },
+      getRoleDetail(id,type) {
+        this.$store.dispatch(`${this.namespace}/read`, {'param': id})
+          .then(data => {
+            console.log(data)
+            switch (data.code) {
+              case '0':
+                this.model = data.rsp
+                this.addModal = true
+                if (type === 'view') {
+                  this.isDisable = true
+                  this.isShow = false
+                  this.isEdit = false
+                }
+                if (type === 'edit') {
+                  this.isDisable = false
+                  this.isShow = false
+                  this.isEdit = true
+                }
+                break
+              default:
+                this.$Message.error('失败!')
+                break
+            }
+          })
+      },
       deleteRole(index, id) {
         this.$store.dispatch(`${this.namespace}/remove`, {'param': id})
           .then(data => {
@@ -143,6 +173,8 @@
       },
       showModal() {
         this.addModal = true
+        this.isDisable = false
+        this.isShow = true
         this.model = {
           roleName: '',
           roleCode: '',

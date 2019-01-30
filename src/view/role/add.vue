@@ -19,10 +19,11 @@
           <Input v-model="model.roleDesc" placeholder="请输入角色描述" style="width: 400px" :disabled="isDisable"/>
         </Col>
         <Col span="12" style="text-align: right;margin-top: 10px">
-          <Button type="primary" @click="addRole()">确定</Button>
+          <Button type="primary" @click="updateRole()" v-if="isEdit">修改</Button>
+          <Button type="primary" @click="addRole()" v-if="isShow">确定</Button>
         </Col>
         <Col span="12" style="text-align: left;margin-top: 10px">
-          <Button @click="showModal()">取消</Button>
+          <Button @click="showModal()" v-if="isShow || isEdit">取消</Button>
         </Col>
       </Row>
     </Modal>
@@ -39,20 +40,25 @@
         type: Boolean,
         default: false
       },
-      roleId: {
-        type: Number,
-        default: 0
+      isShow: {
+        type: Boolean,
+        default: true
+      },
+      isEdit: {
+        type: Boolean,
+        default: false
+      },
+      isDisable: {
+        type: Boolean,
+        default: false
+      },
+      model: {
+        type: Object,
       }
     },
     data() {
       return {
         namespace: 'role',
-        isDisable: false,
-        model: {
-          roleName: '',
-          roleCode: '',
-          roleDesc: ''
-        },
       }
     },
     methods: {
@@ -67,7 +73,7 @@
             switch (data.code) {
               case '0':
                 this.$Message.success('成功!')
-                this.$emit('refresh-role-list', data.code)
+                this.$emit('refresh', data.code)
                 break
               default:
                 this.$Message.error(data.msg)
@@ -75,16 +81,16 @@
             }
           })
       },
-      getRoleDetail(id) {
-        this.$store.dispatch(`${this.namespace}/read`, {'param': id})
+      updateRole() {
+        this.$store.dispatch(`${this.namespace}/updateRole`, {'param': this.model})
           .then(data => {
-            console.log(data)
             switch (data.code) {
               case '0':
-                this.model = data.rsp
+                this.$Message.success('成功!')
+                this.$emit('refresh', data.code)
                 break
               default:
-                this.$Message.error('失败!')
+                this.$Message.error(data.msg)
                 break
             }
           })
