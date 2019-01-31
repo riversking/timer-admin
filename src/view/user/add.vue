@@ -1,30 +1,30 @@
 <template>
   <div>
     <!--在子组件中用:value替代v-model-->
-    <Modal :value="addModal" footer-hide :closable="true">
-      <p slot="header" style="color:#1e27ff">
+    <Modal :value="addModal" footer-hide :closable="true" @on-cancel="showModal()">
+      <p slot="header">
         <span>新增用户</span>
       </p>
       <Form :model="formItem" :label-width="80">
         <FormItem label="用户名：">
-          <Input v-model="formItem.username" placeholder="请输入用户名" :disabled="isDisable"></Input>
+          <Input v-model="formItem.username" placeholder="请输入用户名"></Input>
         </FormItem>
-        <FormItem label="密码：" v-show="showCom">
+        <FormItem label="密码：">
           <Input v-model="formItem.password" placeholder="请输入密码" type="password"></Input>
         </FormItem>
         <FormItem label="手机号：">
-          <Input v-model="formItem.phone" placeholder="请输入手机号" :disabled="isDisable"></Input>
+          <Input v-model="formItem.phone" placeholder="请输入手机号"></Input>
         </FormItem>
         <FormItem label="角色：">
-          <Select v-model="formItem.roleIds" multiple :disabled="isDisable">
+          <Select v-model="formItem.roleIds" multiple>
             <Option v-for="item in roleList" :value="item.id" :key="item.id">{{item.roleName}}</Option>
           </Select>
         </FormItem>
         <FormItem label="头像：">
           <div>
-            <img class="demo-upload-list" :src="'http://localhost:10500/api/v1/image/'+formItem.avatar" v-if="showImg"/>
+            <!--<img class="demo-upload-list" :src="'http://localhost:10500/api/v1/image/'+formItem.avatar"/>-->
             <div class="demo-upload-list" v-for="item in uploadList">
-              <template v-if="item.status === 'finished'" v-show="showCom">
+              <template v-if="item.status === 'finished'">
                 <img :src="item.url">
                 <div class="demo-upload-list-cover">
                   <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
@@ -48,19 +48,17 @@
               type="drag"
               :multiple=false
               action="/file/upload"
-              v-show="showCom"
               style="display: inline-block;width:58px;">
               <div style="width: 58px;height:58px;line-height: 58px;">
                 <Icon type="ios-camera" size="20"></Icon>
               </div>
             </Upload>
             <Modal title="View Image" v-model="visible">
-              <img :src="'http://localhost:10500/api/v1/image/'+this.formItem.avatar" v-if="visible"
-                   style="width: 100%">
+              <img :src="'/image/'+this.formItem.avatar" style="width: 100%" v-if="visible">
             </Modal>
           </div>
         </FormItem>
-        <FormItem v-show="isVisable">
+        <FormItem>
           <Button type="primary" @click="addUser()">确认</Button>
           <Button style="margin-left: 8px">取消</Button>
         </FormItem>
@@ -78,76 +76,132 @@
       addModal: {
         type: Boolean,
         default: false
-      },
-      isShow: {
-        type: Boolean,
-        default: true
-      },
-      isEdit: {
-        type: Boolean,
-        default: false
-      },
-      isDisable: {
-        type: Boolean,
-        default: false
-      },
-      model: {
-        type: Object,
       }
     },
     data() {
       return {
         namespace: 'role',
+        formItem: {
+          username: '',
+          password: '',
+          phone: '',
+          roleIds: [],
+          avatar: ''
+        },
+        defaultList: [],
+        imgName: '',
+        visible: false,
+        uploadList: [],
       }
     },
     methods: {
-      addRole() {
-        let query = {
-          'roleName': this.model.roleName,
-          'roleCode': this.model.roleCode,
-          'roleDesc': this.model.roleDesc
-        }
-        this.$store.dispatch(`${this.namespace}/addRole`, {'param': query})
-          .then(data => {
-            switch (data.code) {
-              case '0':
-                this.$Message.success('成功!')
-                this.$emit('refresh', data.code)
-                break
-              default:
-                this.$Message.error(data.msg)
-                break
-            }
-          })
+      handleView(name) {
+        this.imgName = name;
+        this.visible = true;
       },
-      updateRole() {
-        this.$store.dispatch(`${this.namespace}/updateRole`, {'param': this.model})
+      handleRemove(file) {
+        const fileList = this.$refs.upload.fileList;
+        this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
+      },
+      handleSuccess(res, file) {
+        file.url = 'http://localhost:10500/api/v1/image/' + res.rsp;
+        this.formItem.avatar = res.rsp
+        file.name = res.rsp;
+      },
+      handleFormatError(file) {
+        this.$Notice.warning({
+          title: 'The file format is incorrect',
+          desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
+        });
+      },
+      handleMaxSize(file) {
+        this.$Notice.warning({
+          title: 'Exceeding file size limit',
+          desc: 'File  ' + file.name + ' is too large, no more than 2M.'
+        });
+      },
+      handleBeforeUpload() {
+        const check = this.uploadList.length < 2;
+        if (!check) {
+          this.$Notice.warning({
+            title: 'Up to one pictures can be uploaded.'
+          });
+        }
+        return check;
+      },
+      addUser() {
+        this.formItem.createUser = 'admin'
+        this.formItem.updateUser = 'admin'
+        this.$store.dispatch('add', {'param': this.formItem})
           .then(data => {
             switch (data.code) {
               case '0':
-                this.$Message.success('成功!')
-                this.$emit('refresh', data.code)
+                this.$Message.success(data.msg)
+                this.$emit('add-user', data.code)
                 break
               default:
                 this.$Message.error(data.msg)
                 break
             }
           })
+        this.uploadList = []
       },
       showModal() {
-        this.$emit('refresh', 2)
+        this.$emit('add-user', 1)
       }
     },
     computed: {
       ...mapState({
-        listData: state => state.role.listData
+        roleList: state => state.role.roleList
       })
     },
     mounted() {
-
+      this.uploadList = this.$refs.upload.fileList;
     },
     created() {
 
     }
   }
 </script>
+<style>
+  .demo-upload-list {
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    line-height: 60px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #fff;
+    position: relative;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+    margin-right: 4px;
+  }
+
+  .demo-upload-list img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .demo-upload-list-cover {
+    display: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, .6);
+  }
+
+  .demo-upload-list:hover .demo-upload-list-cover {
+    display: block;
+  }
+
+  .demo-upload-list-cover i {
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    margin: 0 2px;
+  }
+</style>

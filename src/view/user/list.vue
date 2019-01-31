@@ -3,7 +3,7 @@
     <div>
       <Row>
         <Button icon="md-add" type="primary" @click="showModal">新增</Button>
-
+        <AddUserModal :addModal="addModal" v-on:add-user="refreshUser"></AddUserModal>
       </Row>
       <br>
       <Row :gutter="12">
@@ -16,11 +16,14 @@
 </template>
 <script>
   import {mapState} from 'vuex'
+  import AddUserModal from './add'
 
   export default {
 
     name: 'userList',
-    components: {},
+    components: {
+      AddUserModal
+    },
     data() {
       return {
         namespace: 'user',
@@ -29,17 +32,6 @@
         showCom: true,
         showImg: false,
         isVisable: true,
-        formItem: {
-          username: '',
-          password: '',
-          phone: '',
-          roleIds: [],
-          avatar: ''
-        },
-        defaultList: [],
-        imgName: '',
-        visible: false,
-        uploadList: [],
         userColumns: [
           {
             title: '序号',
@@ -72,8 +64,7 @@
                   },
                   on: {
                     click: () => {
-                      this.visible = true
-                      this.formItem.avatar =  params.row.avatar
+                      this.formItem.avatar = params.row.avatar
                     }
                   }
                 },)
@@ -146,42 +137,6 @@
       }
     },
     methods: {
-      handleView(name) {
-        this.imgName = name;
-        this.visible = true;
-      },
-      handleRemove(file) {
-        const fileList = this.$refs.upload.fileList;
-        this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
-      },
-      handleSuccess(res, file) {
-        console.log("res", res)
-        console.log("file", file)
-        file.url = 'http://localhost:10500/api/v1/image/' + res.rsp;
-        this.formItem.avatar = res.rsp
-        file.name = res.rsp;
-      },
-      handleFormatError(file) {
-        this.$Notice.warning({
-          title: 'The file format is incorrect',
-          desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
-        });
-      },
-      handleMaxSize(file) {
-        this.$Notice.warning({
-          title: 'Exceeding file size limit',
-          desc: 'File  ' + file.name + ' is too large, no more than 2M.'
-        });
-      },
-      handleBeforeUpload() {
-        const check = this.uploadList.length < 2;
-        if (!check) {
-          this.$Notice.warning({
-            title: 'Up to one pictures can be uploaded.'
-          });
-        }
-        return check;
-      },
       showModal() {
         this.addModal = true
         this.showCom = true
@@ -196,28 +151,10 @@
           avatar: ''
         }
       },
-      addUser() {
-        this.formItem.createUser = 'admin'
-        this.formItem.updateUser = 'admin'
-        this.$store.dispatch('add', {'param': this.formItem})
-          .then(data => {
-            switch (data.code) {
-              case '0':
-                this.$Message.success(data.msg)
-                this.getList()
-                break
-              default:
-                this.$Message.error(data.msg)
-                break
-            }
-          })
-        this.addModal = false
-        this.uploadList = []
-      },
       getRoleList() {
         this.$store.dispatch(`role/getRoleList`, {'param': this.formItem})
           .then(data => {
-            console.log('datadatadatadata', data)
+            // console.log('datadatadatadata', data)
           })
       },
       getList() {
@@ -237,10 +174,6 @@
               case '0':
                 this.formItem = data.rsp
                 this.addModal = true
-                this.showCom = false
-                this.isVisable = false
-                this.isDisable = true
-                this.showImg = true
                 break
               default:
                 this.$Message.error('失败!')
@@ -249,7 +182,7 @@
           })
       },
       deleteUser(index, id) {
-        this.$store.dispatch(`deleteById`, { 'param': id })
+        this.$store.dispatch(`deleteById`, {'param': id})
           .then(data => {
             switch (data.code) {
               case '0':
@@ -260,6 +193,12 @@
                 break
             }
           })
+      },
+      refreshUser(item) {
+        if (item === '0') {
+          this.getList()
+        }
+        this.addModal = false
       }
     },
     computed: {
@@ -269,7 +208,6 @@
       })
     },
     mounted() {
-      this.uploadList = this.$refs.upload.fileList;
       this.getRoleList()
     },
     created() {
@@ -277,45 +215,3 @@
     }
   }
 </script>
-<style>
-  .demo-upload-list {
-    display: inline-block;
-    width: 60px;
-    height: 60px;
-    text-align: center;
-    line-height: 60px;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    overflow: hidden;
-    background: #fff;
-    position: relative;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
-    margin-right: 4px;
-  }
-
-  .demo-upload-list img {
-    width: 100%;
-    height: 100%;
-  }
-
-  .demo-upload-list-cover {
-    display: none;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, .6);
-  }
-
-  .demo-upload-list:hover .demo-upload-list-cover {
-    display: block;
-  }
-
-  .demo-upload-list-cover i {
-    color: #fff;
-    font-size: 20px;
-    cursor: pointer;
-    margin: 0 2px;
-  }
-</style>
