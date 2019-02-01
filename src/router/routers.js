@@ -74,6 +74,24 @@ export default [
           title: '角色管理'
         },
         component: () => import('@/view/role/list.vue')
+      },
+      {
+        path: 'menu',
+        name: 'menu',
+        meta: {
+          icon: 'md-funnel',
+          title: '菜单管理'
+        },
+        component: () => import('@/view/menu/list.vue')
+      },
+      {
+        path: 'department',
+        name: 'department',
+        meta: {
+          icon: 'md-funnel',
+          title: '部门管理'
+        },
+        component: () => import('@/view/department/list.vue')
       }
     ]
   },
