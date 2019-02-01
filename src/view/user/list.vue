@@ -3,7 +3,7 @@
     <div>
       <Row>
         <Button icon="md-add" type="primary" @click="showModal">新增</Button>
-        <AddUserModal :addModal="addModal" v-on:add-user="refreshUser"></AddUserModal>
+        <AddUserModal :addModal="addModal" v-on:add-user="refreshUser" :formItem="formItem" :isDisable="isDisable"></AddUserModal>
       </Row>
       <br>
       <Row :gutter="12">
@@ -32,6 +32,13 @@
         showCom: true,
         showImg: false,
         isVisable: true,
+        formItem: {
+          username: '',
+          password: '',
+          phone: '',
+          roleIds: [],
+          avatar: ''
+        },
         userColumns: [
           {
             title: '序号',
@@ -174,6 +181,7 @@
               case '0':
                 this.formItem = data.rsp
                 this.addModal = true
+                this.isDisable = true
                 break
               default:
                 this.$Message.error('失败!')
