@@ -49,10 +49,10 @@ export default [
     ]
   },
   {
-    path: '/multilevel',
-    name: 'multilevel',
+    path: '/setting',
+    name: 'setting',
     meta: {
-      icon: 'md-menu',
+      icon: 'md-cog',
       title: '系统管理'
     },
     component: Main,
@@ -61,7 +61,7 @@ export default [
         path: 'user',
         name: 'user',
         meta: {
-          icon: 'md-funnel',
+          icon: 'md-contact',
           title: '用户管理'
         },
         component: () => import('@/view/user/list.vue')
@@ -70,7 +70,7 @@ export default [
         path: 'role',
         name: 'role',
         meta: {
-          icon: 'md-funnel',
+          icon: 'md-school',
           title: '角色管理'
         },
         component: () => import('@/view/role/list.vue')
@@ -79,7 +79,7 @@ export default [
         path: 'menu',
         name: 'menu',
         meta: {
-          icon: 'md-funnel',
+          icon: 'md-menu',
           title: '菜单管理'
         },
         component: () => import('@/view/menu/list.vue')
@@ -88,7 +88,7 @@ export default [
         path: 'department',
         name: 'department',
         meta: {
-          icon: 'md-funnel',
+          icon: 'md-apps',
           title: '部门管理'
         },
         component: () => import('@/view/department/list.vue')
