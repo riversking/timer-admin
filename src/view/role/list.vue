@@ -1,11 +1,19 @@
 <template>
   <Card>
     <div>
-      <Row>
-        <Col span="24">
+      <Row :gutter="16">
+        <Col span="6">
           <Button icon="md-add" type="primary" @click="showModal">新增</Button>
-          <addRole v-on:refresh="getRefreshList" :addModal="addModal" :isDisable="isDisable" :isShow="isShow" :isEdit="isEdit"
+          <addRole v-on:refresh="getRefreshList" :addModal="addModal" :isDisable="isDisable" :isShow="isShow"
+                   :isEdit="isEdit"
                    :model="model"></addRole>
+        </Col>
+        <Col span="18" style="text-align: right">
+          <Input placeholder="请输入角色名称" style="width: 200px;margin-right: 5px"></Input>
+          <Input placeholder="请输入角色标识" style="width: 200px;margin-right: 5px"></Input>
+          <DatePicker type="datetimerange" format="yyyy-MM-dd HH:mm" placeholder="请选择时间"
+                      style="width: 200px;margin-right: 5px"></DatePicker>
+          <Button icon="md-search" type="primary">搜索</Button>
         </Col>
       </Row>
       <br>
@@ -84,7 +92,7 @@
                   },
                   on: {
                     click: () => {
-                      this.getRoleDetail(params.row.id,"view")
+                      this.getRoleDetail(params.row.id, "view")
                     }
                   }
                 }, '查看'),
@@ -99,7 +107,7 @@
                   },
                   on: {
                     click: () => {
-                      this.getRoleDetail(params.row.id,"edit")
+                      this.getRoleDetail(params.row.id, "edit")
                     }
                   }
                 }, '编辑'),
@@ -132,7 +140,7 @@
             console.log(data)
           })
       },
-      getRoleDetail(id,type) {
+      getRoleDetail(id, type) {
         this.$store.dispatch(`${this.namespace}/read`, {'param': id})
           .then(data => {
             console.log(data)
