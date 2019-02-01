@@ -9,17 +9,24 @@
                    :model="model"></addRole>
         </Col>
         <Col span="18" style="text-align: right">
-          <Input placeholder="请输入角色名称" style="width: 200px;margin-right: 5px"></Input>
-          <Input placeholder="请输入角色标识" style="width: 200px;margin-right: 5px"></Input>
-          <DatePicker type="datetimerange" format="yyyy-MM-dd HH:mm" placeholder="请选择时间"
+          <Input v-model="roleName" placeholder="请输入角色名称" clearable style="width: 200px;margin-right: 5px"></Input>
+          <Input v-model="roleCode" placeholder="请输入角色标识" clearable style="width: 200px;margin-right: 5px"></Input>
+          <DatePicker v-model="createTime" type="datetime" placeholder="请选择创建时间"
                       style="width: 200px;margin-right: 5px"></DatePicker>
-          <Button icon="md-search" type="primary">搜索</Button>
+          <DatePicker v-model="updateTime" type="datetime" placeholder="请选择更新时间"
+                      style="width: 200px;margin-right: 5px"></DatePicker>
+          <Button icon="md-search" type="primary" @click="searchRole()">搜索</Button>
         </Col>
       </Row>
       <br>
       <Row :gutter="12">
         <Col span="24">
-          <Table border :columns="roleColumns" :data="listData"></Table>
+          <Table :loading="loading" border :columns="roleColumns" :data="listData"></Table>
+        </Col>
+      </Row>
+      <Row>
+        <Col span="24">
+          <Page :total="100" prev-text="Previous" next-text="Next"/>
         </Col>
       </Row>
     </div>
@@ -43,6 +50,11 @@
         isDisable: false,
         isShow: true,
         isEdit: false,
+        roleName: '',
+        roleCode: '',
+        createTime: '',
+        updateTime: '',
+        loading: false,
         model: {
           id: '',
           roleName: '',
@@ -133,10 +145,16 @@
       getList() {
         let query = {
           page: 1,
-          pageSize: 20
+          pageSize: 20,
+          roleName: this.roleName,
+          roleCode: this.roleCode,
+          createTime: this.createTime,
+          updateTime: this.updateTime
         }
+        this.loading = true
         this.$store.dispatch(`${this.namespace}/getListData`, {'param': query})
           .then(data => {
+            this.loading = false
             console.log(data)
           })
       },
@@ -179,6 +197,9 @@
             }
           })
       },
+      searchRole() {
+        this.getList()
+      },
       showModal() {
         this.addModal = true
         this.isDisable = false
@@ -198,7 +219,8 @@
     },
     computed: {
       ...mapState({
-        listData: state => state.role.listData
+        listData: state => state.role.listData,
+        total: state => state.role.total
       })
     },
     mounted() {

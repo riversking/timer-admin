@@ -54,7 +54,6 @@ const actions = {
       let res = await postData(`${namespace}/addRole`, obj).catch(err => {
         commit('GLOBAL_ERR', err, {root: true})
       })
-      console.log("res.datares.datares.data", res)
       switch (res.status) {
         case 200:
           break
@@ -73,7 +72,6 @@ const actions = {
       let res = await postData(`${namespace}/roleList`, obj).catch(err => {
         commit('GLOBAL_ERR', err, {root: true})
       })
-      console.log("res.datares.datares.data", res)
       switch (res.status) {
         case 200:
           commit("SET_ROLE_LIST", res.data)
