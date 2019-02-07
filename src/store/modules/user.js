@@ -144,7 +144,7 @@ export default {
     },
     [mt.SET_LIST_DATA] (state, payload) {
       state.listData = payload.rsp.records
-      state.total = parseInt(payload.total)
+      state.total = parseInt(payload.rsp.total)
       // state.permission = payload.permission
     },
     ['SET_ACCESS_TOKEN'] (state, access_token) {

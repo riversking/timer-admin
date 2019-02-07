@@ -26,7 +26,7 @@
       </Row>
       <Row>
         <Col span="24">
-          <Page :total="100" prev-text="Previous" next-text="Next"/>
+          <Page :total="total" prev-text="Previous" next-text="Next"/>
         </Col>
       </Row>
     </div>

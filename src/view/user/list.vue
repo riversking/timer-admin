@@ -1,14 +1,31 @@
 <template>
   <Card>
     <div>
-      <Row>
-        <Button icon="md-add" type="primary" @click="showModal">新增</Button>
-        <AddUserModal :addModal="addModal" v-on:add-user="refreshUser" :formItem="formItem" :isDisable="isDisable"></AddUserModal>
+      <Row :gutter="16">
+        <Col span="6">
+          <Button icon="md-add" type="primary" @click="showModal">新增</Button>
+          <AddUserModal :addModal="addModal" v-on:add-user="refreshUser" :formItem="formItem"
+                        :isDisable="isDisable"></AddUserModal>
+        </Col>
+        <Col span="18" style="text-align: right">
+          <Input v-model="userName" placeholder="请输入用户名称" clearable style="width: 200px;margin-right: 5px"></Input>
+          <Input v-model="phone" placeholder="请输入手机号" clearable style="width: 200px;margin-right: 5px"></Input>
+          <DatePicker v-model="createTime" type="datetime" placeholder="请选择创建时间"
+                      style="width: 200px;margin-right: 5px"></DatePicker>
+          <DatePicker v-model="updateTime" type="datetime" placeholder="请选择更新时间"
+                      style="width: 200px;margin-right: 5px"></DatePicker>
+          <Button icon="md-search" type="primary" @click="searchUser()">搜索</Button>
+        </Col>
       </Row>
       <br>
       <Row :gutter="12">
         <Col span="24">
           <Table border :columns="userColumns" :data="listData"></Table>
+        </Col>
+      </Row>
+      <Row>
+        <Col span="24">
+          <Page :total="total" prev-text="Previous" next-text="Next"/>
         </Col>
       </Row>
     </div>
@@ -32,6 +49,10 @@
         showCom: true,
         showImg: false,
         isVisable: true,
+        userName: '',
+        phone: '',
+        createTime: '',
+        updateTime: '',
         formItem: {
           username: '',
           password: '',
@@ -167,7 +188,11 @@
       getList() {
         let query = {
           page: 1,
-          pageSize: 20
+          pageSize: 20,
+          username: this.userName,
+          phone: this.phone,
+          createTime: this.createTime,
+          updateTime: this.updateTime,
         }
         this.$store.dispatch(`getListData`, {'param': query})
           .then(data => {
@@ -202,6 +227,9 @@
             }
           })
       },
+      searchUser() {
+        this.getList()
+      },
       refreshUser(item) {
         if (item === '0') {
           this.getList()
@@ -212,7 +240,9 @@
     computed: {
       ...mapState({
         listData: state => state.user.listData,
-        roleList: state => state.role.roleList
+        roleList: state => state.role.roleList,
+        total: state => state.user.total,
+        token: state => state.user.token
       })
     },
     mounted() {
