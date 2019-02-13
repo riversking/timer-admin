@@ -2,8 +2,8 @@
   <Card>
     <Row>
       <ButtonGroup>
-        <Button type="primary">新增</Button>
-        <Button type="primary">编辑</Button>
+        <Button type="primary" @click="add">新增</Button>
+        <Button type="primary" @click="edit">编辑</Button>
         <Button type="primary">删除</Button>
       </ButtonGroup>
     </Row>
@@ -14,7 +14,7 @@
       <Col span="18">
         <Form :model="formItem" :label-width="80">
           <FormItem label="父亲节点">
-            <Input v-model="formItem.parentId" placeholder="请输入父亲节点" :disabled="disable"></Input>
+            <Input v-model="formItem.parentId" placeholder="请输入父亲节点" :disabled="true"></Input>
           </FormItem>
           <FormItem label="节点ID">
             <Input v-model="formItem.id" placeholder="请输入节点ID" :disabled="disable"></Input>
@@ -29,7 +29,7 @@
             <Input v-model="formItem.icon" placeholder="请输入图标" :disabled="disable"></Input>
           </FormItem>
           <FormItem label="类型">
-            <Select v-model="formItem.type" :disabled="true">
+            <Select v-model="formItem.type" :disabled="disable">
               <Option value="0">按钮</Option>
               <Option value="1">菜单</Option>
             </Select>
@@ -37,9 +37,10 @@
           <FormItem label="排序">
             <Input v-model="formItem.sort" placeholder="请输入排序" :disabled="disable"></Input>
           </FormItem>
-          <FormItem v-if="isShow">
-            <Button type="primary">新增</Button>
-            <Button style="margin-left: 8px">取消</Button>
+          <FormItem>
+            <Button type="primary" v-if="isShow">新增</Button>
+            <Button type="primary" v-if="isEdit">更新</Button>
+            <Button style="margin-left: 8px" v-if="isShow || isEdit">取消</Button>
           </FormItem>
         </Form>
       </Col>
@@ -66,7 +67,8 @@
         },
         loading: false,
         disable: true,
-        isShow: false
+        isShow: false,
+        isEdit: false
       }
     },
     methods: {
@@ -77,11 +79,25 @@
           })
       },
       selectNode(v) {
-        console.log("asdasdasdasdasd", v)
-        this.$store.dispatch(`${this.namespace}/read`,{"param":v[0].id})
+        this.$store.dispatch(`${this.namespace}/read`, {"param": v[0].id})
           .then(data => {
             this.formItem = data.rsp
           })
+      },
+      edit() {
+        this.disable = false
+        this.isEdit = true
+        this.isShow = false
+      },
+      add() {
+        this.disable = false
+        this.isShow = true
+        this.isEdit = false
+        this.formItem.id= ''
+        this.formItem.name= ''
+        this.formItem.icon= ''
+        this.formItem.type= ''
+        this.formItem.sort= ''
       }
     },
     computed: {
@@ -90,7 +106,6 @@
       })
     },
     mounted() {
-
     },
     created() {
       this.getList()
