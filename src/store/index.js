@@ -6,6 +6,7 @@ import { getToken } from '../libs/util'
 import user from './modules/user'
 import app from './modules/app'
 import role from './modules/role'
+import menu from './modules/menu'
 
 Vue.use(Vuex)
 
@@ -23,6 +24,7 @@ const store = new Vuex.Store({
     user,
     app,
     role,
+    menu,
     getters
   }
 })
