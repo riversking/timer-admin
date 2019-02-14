@@ -85,19 +85,24 @@
           })
       },
       edit() {
-        this.disable = false
-        this.isEdit = true
-        this.isShow = false
+        if (this.formItem.id) {
+          this.disable = false
+          this.isEdit = true
+          this.isShow = false
+        }
       },
       add() {
         this.disable = false
         this.isShow = true
         this.isEdit = false
-        this.formItem.id= ''
-        this.formItem.name= ''
-        this.formItem.icon= ''
-        this.formItem.type= ''
-        this.formItem.sort= ''
+        this.formItem = {
+          parentId: this.formItem.id || -1,
+          id: '',
+          name: '',
+          icon: '',
+          type: '',
+          sort: '',
+        }
       }
     },
     computed: {

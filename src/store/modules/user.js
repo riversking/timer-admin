@@ -143,8 +143,8 @@ export default {
       state.loading = bool
     },
     [mt.SET_LIST_DATA] (state, payload) {
-      state.listData = payload.rsp.records
-      state.total = parseInt(payload.rsp.total)
+      state.listData = payload.datas.records
+      state.total = parseInt(payload.datas.total)
       // state.permission = payload.permission
     },
     ['SET_ACCESS_TOKEN'] (state, access_token) {

@@ -71,16 +71,16 @@ const mutations = {
   },
   [mt.SET_LIST_DATA](state, payload) {
     console.log(payload.rsp)
-    state.listData = payload.rsp
+    state.listData = payload.datas
     // state.permission = payload.permission
   },
   [mt.SET_MODEL](state, payload) {
     console.log("payload", payload)
-    state.menuModel = payload.rsp
+    state.menuModel = payload.datas
     // state.widget.authList = payload.widget.authList
   },
   ["SET_MENU_LIST"](state, payload) {
-    state.listData = payload.rsp
+    state.listData = payload.datas
   }
 }
 

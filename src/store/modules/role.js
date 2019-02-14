@@ -150,17 +150,17 @@ const mutations = {
   },
   [mt.SET_LIST_DATA](state, payload) {
     console.log(payload)
-    state.listData = payload.rsp.records
+    state.listData = payload.datas.records
     state.total = parseInt(payload.rsp.total)
     // state.permission = payload.permission
   },
   [mt.SET_MODEL](state, payload) {
     console.log("payload", payload)
-    state.roleModel = payload.rsp
+    state.roleModel = payload.datas
     // state.widget.authList = payload.widget.authList
   },
   ["SET_ROLE_LIST"](state, payload) {
-    state.roleList = payload.rsp
+    state.roleList = payload.datas
   }
 }
 
