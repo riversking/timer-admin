@@ -43,6 +43,25 @@ const actions = {
       console.log('error: ', error)
     }
   },
+  async add({commit}, obj) {
+    try {
+      commit(mt.SET_LOADING, true)
+      let res = await postData(`${namespace}/addMenu`, obj).catch(err => {
+        commit('GLOBAL_ERR', err, {root: true})
+      })
+      switch (res.status) {
+        case 200:
+          break
+        default:
+          break
+      }
+      commit(mt.SET_LOADING, false)
+
+      return res.data
+    } catch (error) {
+      console.log('error: ', error)
+    }
+  },
   async read({commit}, obj) {
     try {
       commit(mt.SET_LOADING, true)

@@ -38,9 +38,9 @@
             <Input v-model="formItem.sort" placeholder="请输入排序" :disabled="disable"></Input>
           </FormItem>
           <FormItem>
-            <Button type="primary" v-if="isShow">新增</Button>
+            <Button type="primary" v-if="isAdd" @click="create">新增</Button>
             <Button type="primary" v-if="isEdit">更新</Button>
-            <Button style="margin-left: 8px" v-if="isShow || isEdit">取消</Button>
+            <Button style="margin-left: 8px" v-if="isAdd || isEdit">取消</Button>
           </FormItem>
         </Form>
       </Col>
@@ -67,7 +67,7 @@
         },
         loading: false,
         disable: true,
-        isShow: false,
+        isAdd: false,
         isEdit: false
       }
     },
@@ -81,19 +81,19 @@
       selectNode(v) {
         this.$store.dispatch(`${this.namespace}/read`, {"param": v[0].id})
           .then(data => {
-            this.formItem = data.rsp
+            this.formItem = data.datas
           })
       },
       edit() {
         if (this.formItem.id) {
           this.disable = false
           this.isEdit = true
-          this.isShow = false
+          this.isAdd = false
         }
       },
       add() {
         this.disable = false
-        this.isShow = true
+        this.isAdd = true
         this.isEdit = false
         this.formItem = {
           parentId: this.formItem.id || -1,
@@ -103,6 +103,23 @@
           type: '',
           sort: '',
         }
+      },
+      create() {
+        this.formItem.createUser = 'admin'
+        this.formItem.updateUser = 'admin'
+        this.$store.dispatch(`${this.namespace}/add`, {"param": this.formItem})
+          .then(data => {
+            console.log('asdasdasdasd', data)
+            switch (data.code) {
+              case '0':
+                this.$Message.success(data.message)
+                this.getList()
+                break
+              default:
+                this.$Message.error(data.message)
+                break
+            }
+          })
       }
     },
     computed: {

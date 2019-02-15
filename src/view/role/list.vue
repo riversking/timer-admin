@@ -192,7 +192,7 @@
                 this.listData.splice(index, 1)
                 break
               default:
-                this.$Message.error(data.msg)
+                this.$Message.error(data.message)
                 break
             }
           })

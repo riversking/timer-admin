@@ -137,11 +137,11 @@
           .then(data => {
             switch (data.code) {
               case '0':
-                this.$Message.success(data.msg)
+                this.$Message.success(data.message)
                 this.$emit('add-user', data.code)
                 break
               default:
-                this.$Message.error(data.msg)
+                this.$Message.error(data.message)
                 break
             }
           })

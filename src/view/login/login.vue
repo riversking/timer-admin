@@ -73,7 +73,7 @@ export default {
             switch (data.code) {
               case '0':
                 // Cookies.set('user', JSON.stringify(data.data.sysUser))
-                this.$store.dispatch('getUserInfo', data.rsp.accessToken).then(res => {
+                this.$store.dispatch('getUserInfo', data.datas.accessToken).then(res => {
                   console.log('ddddddddddd', res)
                   this.$router.push({
                     name: this.$config.homeName
@@ -81,7 +81,7 @@ export default {
                 })
                 break
               default:
-                this.$Message.error(data.msg)
+                this.$Message.error(data.message)
                 break
             }
             this.loading = false

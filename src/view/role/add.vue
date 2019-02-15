@@ -76,7 +76,7 @@
                 this.$emit('refresh', data.code)
                 break
               default:
-                this.$Message.error(data.msg)
+                this.$Message.error(data.message)
                 break
             }
           })
@@ -90,7 +90,7 @@
                 this.$emit('refresh', data.code)
                 break
               default:
-                this.$Message.error(data.msg)
+                this.$Message.error(data.message)
                 break
             }
           })

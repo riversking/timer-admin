@@ -22,12 +22,12 @@ export default {
         let res = await postData(`/user/login`, obj).catch(err => {
           commit('GLOBAL_ERR', err, { root: true })
         })
-        console.log('res', res.data.rsp.accessToken)
+        console.log('res', res.data.datas)
         switch (res.status) {
           case 200:
-            setToken(res.data.rsp.accessToken)
-            commit('SET_ACCESS_TOKEN', res.data.rsp.accessToken)
-            commit('SET_REFRESH_TOKEN', res.data.refresh_token)
+            setToken(res.data.datas.accessToken)
+            commit('SET_ACCESS_TOKEN', res.data.datas.accessToken)
+            commit('SET_REFRESH_TOKEN', res.data.datas.refresh_token)
             // commit('SET_PERMISSIONS', resUserInfo.data.data.permissions)
             break
           default:
