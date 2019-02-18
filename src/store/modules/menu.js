@@ -1,5 +1,5 @@
 import * as mt from '../mutation-types'
-import {postData, pageSize} from '../../libs/fetchData'
+import { postData, pageSize } from '../../libs/fetchData'
 
 const namespace = '/user/menu'
 
@@ -22,11 +22,11 @@ const state = {
 const getters = {}
 
 const actions = {
-  async getListData({commit}, obj) {
+  async getListData ({ commit }, obj) {
     try {
       commit(mt.SET_LOADING, true)
       let res = await postData(`${namespace}/getMenuTree`, obj).catch(err => {
-        commit('GLOBAL_ERR', err, {root: true})
+        commit('GLOBAL_ERR', err, { root: true })
       })
       switch (res.status) {
         case 200:
@@ -43,11 +43,11 @@ const actions = {
       console.log('error: ', error)
     }
   },
-  async add({commit}, obj) {
+  async add ({ commit }, obj) {
     try {
       commit(mt.SET_LOADING, true)
       let res = await postData(`${namespace}/addMenu`, obj).catch(err => {
-        commit('GLOBAL_ERR', err, {root: true})
+        commit('GLOBAL_ERR', err, { root: true })
       })
       switch (res.status) {
         case 200:
@@ -62,13 +62,13 @@ const actions = {
       console.log('error: ', error)
     }
   },
-  async read({commit}, obj) {
+  async read ({ commit }, obj) {
     try {
       commit(mt.SET_LOADING, true)
       let res = await postData(`${namespace}/getMenuById`, obj).catch(err => {
-        commit('GLOBAL_ERR', err, {root: true})
+        commit('GLOBAL_ERR', err, { root: true })
       })
-      console.log("res.datares.datares.data", res)
+      console.log('res.datares.datares.data', res)
       switch (res.status) {
         case 200:
           commit(mt.SET_MODEL, res.data)
@@ -82,23 +82,59 @@ const actions = {
       console.log('error: ', error)
     }
   },
+  async delete ({ commit }, obj) {
+    try {
+      commit(mt.SET_LOADING, true)
+      let res = await postData(`${namespace}/deleteMenu`, obj).catch(err => {
+        commit('GLOBAL_ERR', err, { root: true })
+      })
+      switch (res.status) {
+        case 200:
+          break
+        default:
+          break
+      }
+      commit(mt.SET_LOADING, false)
+      return res.data
+    } catch (error) {
+      console.log('error: ', error)
+    }
+  },
+  async update ({ commit }, obj) {
+    try {
+      commit(mt.SET_LOADING, true)
+      let res = await postData(`${namespace}/updateMenu`, obj).catch(err => {
+        commit('GLOBAL_ERR', err, { root: true })
+      })
+      switch (res.status) {
+        case 200:
+          break
+        default:
+          break
+      }
+      commit(mt.SET_LOADING, false)
+      return res.data
+    } catch (error) {
+      console.log('error: ', error)
+    }
+  }
 }
 
 const mutations = {
-  [mt.SET_LOADING](state, bool) {
+  [mt.SET_LOADING] (state, bool) {
     state.loading = bool
   },
-  [mt.SET_LIST_DATA](state, payload) {
+  [mt.SET_LIST_DATA] (state, payload) {
     console.log(payload.rsp)
     state.listData = payload.datas
     // state.permission = payload.permission
   },
-  [mt.SET_MODEL](state, payload) {
-    console.log("payload", payload)
+  [mt.SET_MODEL] (state, payload) {
+    console.log('payload', payload)
     state.menuModel = payload.datas
     // state.widget.authList = payload.widget.authList
   },
-  ["SET_MENU_LIST"](state, payload) {
+  'SET_MENU_LIST' (state, payload) {
     state.listData = payload.datas
   }
 }
