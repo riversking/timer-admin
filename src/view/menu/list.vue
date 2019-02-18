@@ -114,6 +114,7 @@ export default {
             case '0':
               this.$Message.success(data.message)
               this.getList()
+              this.disable = true
               break
             default:
               this.$Message.error(data.message)
@@ -128,6 +129,7 @@ export default {
             case '0':
               this.$Message.success(data.message)
               this.getList()
+              this.disable = true
               break
             default:
               this.$Message.error(data.message)
