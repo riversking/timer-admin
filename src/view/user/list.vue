@@ -25,7 +25,7 @@
       </Row>
       <Row>
         <Col span="24">
-          <Page :total="total" prev-text="Previous" next-text="Next"/>
+          <Page :total="total" prev-text="上一页" next-text="下一页" style="margin-top: 10px"/>
         </Col>
       </Row>
     </div>
@@ -180,7 +180,7 @@
         }
       },
       getRoleList() {
-        this.$store.dispatch(`role/getRoleList`, {'param': this.formItem})
+        this.$store.dispatch(`role/getRoleList`)
           .then(data => {
             // console.log('datadatadatadata', data)
           })
@@ -204,7 +204,7 @@
           .then(data => {
             switch (data.code) {
               case '0':
-                this.formItem = data.rsp
+                this.formItem = data.datas
                 this.addModal = true
                 this.isDisable = true
                 break

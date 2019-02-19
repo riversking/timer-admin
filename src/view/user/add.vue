@@ -22,7 +22,7 @@
         </FormItem>
         <FormItem label="头像：">
           <div>
-            <img class="demo-upload-list" :src="'/image/'+formItem.avatar" v-if="isDisable"/>
+            <img class="demo-upload-list" :src="'/api/v1/image/'+formItem.avatar" v-if="isDisable"/>
             <div class="demo-upload-list" v-for="item in uploadList">
               <template v-if="item.status === 'finished'">
                 <img :src="item.url">
@@ -55,7 +55,7 @@
               </div>
             </Upload>
             <Modal title="View Image" v-model="visible">
-              <img :src="'/image/'+this.formItem.avatar" style="width: 100%" v-if="visible">
+              <img :src="'/api/v1/image/'+this.formItem.avatar" style="width: 100%" v-if="visible">
             </Modal>
           </div>
         </FormItem>

@@ -26,7 +26,7 @@
       </Row>
       <Row>
         <Col span="24">
-          <Page :total="total" prev-text="Previous" next-text="Next"/>
+          <Page :total="total" prev-text="上一页" next-text="下一页" style="margin-top: 10px"/>
         </Col>
       </Row>
     </div>
@@ -64,33 +64,39 @@
         roleColumns: [
           {
             title: '序号',
-            key: 'id'
+            key: 'id',
+            align: 'center',
           },
           {
             title: '角色名称',
-            key: 'roleName'
+            key: 'roleName',
+            align: 'center',
           },
           {
             title: '角色标识',
-            key: 'roleCode'
+            key: 'roleCode',
+            align: 'center',
           },
           {
             title: '角色描述',
-            key: 'roleDesc'
+            key: 'roleDesc',
+            align: 'center',
           },
           {
             title: '创建时间',
-            key: 'createTime'
+            key: 'createTime',
+            align: 'center',
           },
           {
             title: '更新时间',
-            key: 'updateTime'
+            key: 'updateTime',
+            align: 'center',
           },
           {
             title: '操作',
             key: 'action',
             align: 'center',
-            width: 250,
+            width: 350,
             render: (h, params) => {
               return h('div', [
                 h('Button', {
@@ -123,6 +129,21 @@
                     }
                   }
                 }, '编辑'),
+                h('Button', {
+                  props: {
+                    type: 'dashed',
+                    size: 'small',
+                    icon: 'md-add'
+                  },
+                  style: {
+                    marginRight: '5px'
+                  },
+                  on: {
+                    click: () => {
+                      this.deleteRole(params.index, params.row.id)
+                    }
+                  }
+                }, '权限'),
                 h('Button', {
                   props: {
                     type: 'error',
@@ -164,7 +185,7 @@
             console.log(data)
             switch (data.code) {
               case '0':
-                this.model = data.rsp
+                this.model = data.datas
                 this.addModal = true
                 if (type === 'view') {
                   this.isDisable = true

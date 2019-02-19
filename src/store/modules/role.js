@@ -151,7 +151,7 @@ const mutations = {
   [mt.SET_LIST_DATA] (state, payload) {
     console.log(payload)
     state.listData = payload.datas.records
-    state.total = parseInt(payload.rsp.total)
+    state.total = parseInt(payload.datas.total)
     // state.permission = payload.permission
   },
   [mt.SET_MODEL] (state, payload) {
