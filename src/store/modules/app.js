@@ -12,7 +12,6 @@ import {
   localRead
 } from '@/libs/util'
 import beforeClose from '@/router/before-close'
-import { saveErrorLogger } from '@/api/data'
 import router from '@/router'
 import routers from '@/router/routers'
 import config from '@/config'
@@ -99,14 +98,11 @@ export default {
       const { user: { token, userId, userName } } = rootState
       let data = {
         ...info,
-        time: Date.parse(new Date()),
+        time: new Date(),
         token,
         userId,
         userName
       }
-      saveErrorLogger(info).then(() => {
-        commit('addError', data)
-      })
     }
   }
 }

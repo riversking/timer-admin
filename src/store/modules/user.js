@@ -2,7 +2,7 @@ import { postData } from '../../libs/fetchData'
 import { setToken, getToken } from '../../libs/util'
 import { setStore, getStore } from '../../libs/store'
 import * as mt from '../mutation-types'
-const namespace = '/user'
+const namespace = '/api/v1/user'
 export default {
   state: {
     userName: '',
@@ -19,7 +19,7 @@ export default {
     // 登录
     async userLogin ({ commit }, obj) {
       try {
-        let res = await postData(`/user/login`, obj).catch(err => {
+        let res = await postData(`${namespace}/login`, obj).catch(err => {
           commit('GLOBAL_ERR', err, { root: true })
         })
         console.log('res', res.data.datas)
@@ -99,13 +99,13 @@ export default {
         console.log('error: ', error)
       }
     },
-    async add ({commit}, obj) {
+    async add ({ commit }, obj) {
       try {
         commit(mt.SET_LOADING, true)
         let res = await postData(`${namespace}/addUser`, obj).catch(err => {
-          commit('GLOBAL_ERR', err, {root: true})
+          commit('GLOBAL_ERR', err, { root: true })
         })
-        console.log("res.datares.datares.data", res)
+        console.log('res.datares.datares.data', res)
         switch (res.status) {
           case 200:
             break
@@ -118,13 +118,13 @@ export default {
         console.log('error: ', error)
       }
     },
-    async deleteById ({commit}, obj) {
+    async deleteById ({ commit }, obj) {
       try {
         commit(mt.SET_LOADING, true)
         let res = await postData(`${namespace}/deleteUser`, obj).catch(err => {
-          commit('GLOBAL_ERR', err, {root: true})
+          commit('GLOBAL_ERR', err, { root: true })
         })
-        console.log("res.datares.datares.data", res)
+        console.log('res.datares.datares.data', res)
         switch (res.status) {
           case 200:
             break
@@ -136,7 +136,7 @@ export default {
       } catch (error) {
         console.log('error: ', error)
       }
-    },
+    }
   },
   mutations: {
     [mt.SET_LOADING] (state, bool) {
@@ -147,7 +147,7 @@ export default {
       state.total = parseInt(payload.datas.total)
       // state.permission = payload.permission
     },
-    ['SET_ACCESS_TOKEN'] (state, access_token) {
+    'SET_ACCESS_TOKEN' (state, access_token) {
       console.log('access_token', access_token)
       console.log('state', state.access_token)
       // state.access_token = access_token
@@ -157,7 +157,7 @@ export default {
         type: 'session'
       })
     },
-    ['SET_REFRESH_TOKEN'] (state, rfToken) {
+    'SET_REFRESH_TOKEN' (state, rfToken) {
       state.refresh_token = rfToken
       setStore({
         name: 'refresh_token',

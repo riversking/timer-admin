@@ -1,7 +1,7 @@
 import * as mt from '../mutation-types'
 import { postData, pageSize } from '../../libs/fetchData'
 
-const namespace = '/user/menu'
+const namespace = '/api/v1/user/menu'
 
 const state = {
   loading: true,

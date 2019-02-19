@@ -13,18 +13,8 @@ const addErrorLog = errorInfo => {
 }
 
 class HttpRequest {
-  constructor (baseUrl = baseURL) {
-    this.baseUrl = baseUrl
+  constructor () {
     this.queue = {}
-  }
-  getInsideConfig () {
-    const config = {
-      baseURL: this.baseUrl,
-      headers: {
-        //
-      }
-    }
-    return config
   }
   destroy (url) {
     delete this.queue[url]

@@ -49,7 +49,13 @@ module.exports = {
     },
     headers: { 'X-Custom-Header': 'yes' },
     // proxy: {
-    proxy: 'http://localhost:10500/api/v1'
+    // proxy: 'http://localhost:10500/api/v1'
     // }
+    proxy: {
+      '/api/v1': {
+        target: 'http://localhost:10500',
+        changeOrigin: true
+      }
+    }
   }
 }
