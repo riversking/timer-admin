@@ -22,11 +22,11 @@
       <Row :gutter="12">
         <Col span="24">
           <Table :loading="loading" border :columns="roleColumns" :data="listData"></Table>
-          <Modal v-model="permissionModal">
+          <Modal v-model="permissionModal" :closable="true" :width="956" @on-ok="updateMenu">
             <p slot="header">
               <span>权限</span>
             </p>
-            <Tree :data="roleMenuTree" show-checkbox multiple></Tree>
+            <Tree :data="roleMenuTree" ref="menuTree" show-checkbox multiple></Tree>
           </Modal>
         </Col>
       </Row>
@@ -152,6 +152,7 @@
                         switch (data.code) {
                           case '0':
                             this.permissionModal = true
+                            this.roleId = params.row.id
                             this.roleMenuTree = data.datas
                             break
                           default:
@@ -253,6 +254,30 @@
           this.getList()
         }
         this.addModal = false
+      },
+      updateMenu() {
+        let menus = this.$refs.menuTree.getCheckedNodes()
+        let menuIds = []
+        menus.forEach(i => {
+          console.log('iiiiiiiiiiiiii',i)
+          menuIds.push(i.id)
+        })
+        let query = {
+          roleId: this.roleId,
+          menuIds: menuIds
+        }
+        this.$store.dispatch(`menu/updateByRoleId`, {'param': query})
+          .then(data => {
+            switch (data.code) {
+              case '0':
+                this.permissionModal = false
+
+                break
+              default:
+                this.$Message.error(data.message)
+                break
+            }
+          })
       }
     },
     computed: {
