@@ -22,6 +22,12 @@
       <Row :gutter="12">
         <Col span="24">
           <Table :loading="loading" border :columns="roleColumns" :data="listData"></Table>
+          <Modal v-model="permissionModal">
+            <p slot="header">
+              <span>权限</span>
+            </p>
+            <Tree :data="roleMenuTree" show-checkbox multiple></Tree>
+          </Modal>
         </Col>
       </Row>
       <Row>
@@ -50,6 +56,8 @@
         isDisable: false,
         isShow: true,
         isEdit: false,
+        permissionModal: false,
+        roleMenuTree: [],
         roleName: '',
         roleCode: '',
         createTime: '',
@@ -140,7 +148,17 @@
                   },
                   on: {
                     click: () => {
-                      this.deleteRole(params.index, params.row.id)
+                      this.$store.dispatch(`menu/getMenuByRoleId`, {'param': params.row.id}).then(data => {
+                        switch (data.code) {
+                          case '0':
+                            this.permissionModal = true
+                            this.roleMenuTree = data.datas
+                            break
+                          default:
+                            this.$Message.error('失败!')
+                            break
+                        }
+                      })
                     }
                   }
                 }, '权限'),
@@ -182,7 +200,6 @@
       getRoleDetail(id, type) {
         this.$store.dispatch(`${this.namespace}/read`, {'param': id})
           .then(data => {
-            console.log(data)
             switch (data.code) {
               case '0':
                 this.model = data.datas

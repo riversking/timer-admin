@@ -109,7 +109,6 @@ export default {
       this.formItem.updateUser = 'admin'
       this.$store.dispatch(`${this.namespace}/add`, { 'param': this.formItem })
         .then(data => {
-          console.log('asdasdasdasd', data)
           switch (data.code) {
             case '0':
               this.$Message.success(data.message)
