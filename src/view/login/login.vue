@@ -40,58 +40,61 @@
 </template>
 
 <script>
-// import Cookies from 'js-cookie'
-// import { mapActions } from 'vuex'
+  // import Cookies from 'js-cookie'
+  // import { mapActions } from 'vuex'
 
-export default {
-  data () {
-    return {
-      loading: false,
-      form: {
-        username: 'admin',
-        password: '123456',
-        code: '',
-        randomStr: ''
-      },
-      rules: {
-        username: [
-          { required: true, message: '账号不能为空', trigger: 'blur' }
-        ],
-        password: [
-          { required: true, message: '密码不能为空', trigger: 'blur' }
-        ]
+  export default {
+    data() {
+      return {
+        loading: false,
+        form: {
+          username: 'admin',
+          password: '123456',
+          code: '',
+          randomStr: ''
+        },
+        rules: {
+          username: [
+            {required: true, message: '账号不能为空', trigger: 'blur'}
+          ],
+          password: [
+            {required: true, message: '密码不能为空', trigger: 'blur'}
+          ]
+        }
+      }
+    },
+    methods: {
+      handleSubmit({userName, password}) {
+        this.$refs.loginForm.validate((valid, opt, callback) => {
+          if (valid) {
+            this.loading = true
+            this.$store.dispatch('userLogin', {
+              'param': {
+                'username': this.form.username,
+                'password': this.form.password
+              }
+            }).then(data => {
+              switch (data.code) {
+                case '0':
+                  // Cookies.set('user', JSON.stringify(data.data.sysUser))
+                  this.$store.dispatch('getUserInfo', {'param': data.datas.username}).then(res => {
+                    this.$router.push({
+                      name: this.$config.homeName
+                    })
+                  })
+                  break
+                default:
+                  this.$Message.error(data.message)
+                  break
+              }
+              this.loading = false
+            })
+          }
+        })
       }
     }
-  },
-  methods: {
-    handleSubmit ({ userName, password }) {
-      this.$refs.loginForm.validate((valid, opt, callback) => {
-        if (valid) {
-          this.loading = true
-          this.$store.dispatch('userLogin', { 'param': { 'username': this.form.username, 'password': this.form.password } }).then(data => {
-            console.log('data', data)
-            switch (data.code) {
-              case '0':
-                // Cookies.set('user', JSON.stringify(data.data.sysUser))
-                this.$store.dispatch('getUserInfo', data.datas.accessToken).then(res => {
-                  console.log('ddddddddddd', res)
-                  this.$router.push({
-                    name: this.$config.homeName
-                  })
-                })
-                break
-              default:
-                this.$Message.error(data.message)
-                break
-            }
-            this.loading = false
-          })
-        }
-      })
-    }
-  }
 
-}
+  }
 </script>
 
 <style>

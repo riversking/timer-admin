@@ -1,7 +1,8 @@
-import { postData } from '../../libs/fetchData'
-import { setToken, getToken } from '../../libs/util'
-import { setStore, getStore } from '../../libs/store'
+import {postData} from '../../libs/fetchData'
+import {setToken, getToken} from '../../libs/util'
+import {setStore, getStore} from '../../libs/store'
 import * as mt from '../mutation-types'
+
 const namespace = '/api/v1/user'
 export default {
   state: {
@@ -17,10 +18,10 @@ export default {
   },
   actions: {
     // 登录
-    async userLogin ({ commit }, obj) {
+    async userLogin({commit}, obj) {
       try {
         let res = await postData(`${namespace}/login`, obj).catch(err => {
-          commit('GLOBAL_ERR', err, { root: true })
+          commit('GLOBAL_ERR', err, {root: true})
         })
         console.log('res', res.data.datas)
         switch (res.status) {
@@ -56,14 +57,37 @@ export default {
     //   })
     // },
     // 获取用户相关信息
-    getUserInfo ({ state, commit }, obj) {
+    async getUserInfo({state, commit}, obj) {
+      try {
+        let res = await postData(`${namespace}/userInfo`, obj).catch(err => {
+          commit('GLOBAL_ERR', err, {root: true})
+        })
+        console.log('res', res.data)
+        switch (res.status) {
+          case 200:
+            // commit('setAvator', data.avator)
+            // commit('setUserName', data.name)
+            // commit('setUserId', data.user_id)
+            // commit('setAccess', data.access)
+            // commit('setHasGetInfo', true)
+            commit('USER_INFO', res.data)
+            break
+          default:
+            break
+        }
+        return res.data
+      } catch (error) {
+        console.log('error: ', error)
+      }
+    },
+    getUser({state, commit}, obj) {
       return 'success'
     },
-    async getListData ({ commit }, obj) {
+    async getListData({commit}, obj) {
       try {
         commit(mt.SET_LOADING, true)
         let res = await postData(`${namespace}/userPage`, obj).catch(err => {
-          commit('GLOBAL_ERR', err, { root: true })
+          commit('GLOBAL_ERR', err, {root: true})
         })
         console.log('res.datares.datares.data', res)
         switch (res.status) {
@@ -81,10 +105,10 @@ export default {
         console.log('error: ', error)
       }
     },
-    async getUserById ({ state, commit }, obj) {
+    async getUserById({state, commit}, obj) {
       try {
         let res = await postData(`${namespace}/getUserById`, obj).catch(err => {
-          commit('GLOBAL_ERR', err, { root: true })
+          commit('GLOBAL_ERR', err, {root: true})
         })
         console.log('res', res.data)
         switch (res.status) {
@@ -99,11 +123,11 @@ export default {
         console.log('error: ', error)
       }
     },
-    async add ({ commit }, obj) {
+    async add({commit}, obj) {
       try {
         commit(mt.SET_LOADING, true)
         let res = await postData(`${namespace}/addUser`, obj).catch(err => {
-          commit('GLOBAL_ERR', err, { root: true })
+          commit('GLOBAL_ERR', err, {root: true})
         })
         console.log('res.datares.datares.data', res)
         switch (res.status) {
@@ -118,11 +142,11 @@ export default {
         console.log('error: ', error)
       }
     },
-    async deleteById ({ commit }, obj) {
+    async deleteById({commit}, obj) {
       try {
         commit(mt.SET_LOADING, true)
         let res = await postData(`${namespace}/deleteUser`, obj).catch(err => {
-          commit('GLOBAL_ERR', err, { root: true })
+          commit('GLOBAL_ERR', err, {root: true})
         })
         console.log('res.datares.datares.data', res)
         switch (res.status) {
@@ -139,15 +163,15 @@ export default {
     }
   },
   mutations: {
-    [mt.SET_LOADING] (state, bool) {
+    [mt.SET_LOADING](state, bool) {
       state.loading = bool
     },
-    [mt.SET_LIST_DATA] (state, payload) {
+    [mt.SET_LIST_DATA](state, payload) {
       state.listData = payload.datas.records
       state.total = parseInt(payload.datas.total)
       // state.permission = payload.permission
     },
-    'SET_ACCESS_TOKEN' (state, access_token) {
+    ['SET_ACCESS_TOKEN'](state, access_token) {
       console.log('access_token', access_token)
       console.log('state', state.access_token)
       // state.access_token = access_token
@@ -157,13 +181,17 @@ export default {
         type: 'session'
       })
     },
-    'SET_REFRESH_TOKEN' (state, rfToken) {
+    ['SET_REFRESH_TOKEN'](state, rfToken) {
       state.refresh_token = rfToken
       setStore({
         name: 'refresh_token',
         content: state.refresh_token,
         type: 'session'
       })
+    },
+    ['USER_INFO'](state, payload) {
+      console.log('payload.datas.avatar', payload.datas.avatar)
+      state.avatorImgPath = payload.datas.avatar
     }
   }
 }
