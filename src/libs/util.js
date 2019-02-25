@@ -34,7 +34,7 @@ export const getMenuByRouter = (list, access) => {
   forEach(list, item => {
     if (!item.meta || (item.meta && !item.meta.hideInMenu)) {
       let obj = {
-        icon: (item.meta && item.meta.icon) || '',
+        icon: (item.meta && item.meta.icon) || "",
         name: item.name,
         meta: item.meta
       }
@@ -42,7 +42,29 @@ export const getMenuByRouter = (list, access) => {
         obj.children = getMenuByRouter(item.children, access)
       }
       if (item.meta && item.meta.href) obj.href = item.meta.href
-      if (showThisMenuEle(item, access)) res.push(obj)
+      if (showThisMenuEle(item, access)) {
+        //      res.push(obj)
+        // 如果没有子菜单，直接显示
+        if (!hasChild(item)) {
+          res.push(obj)
+        } else {
+          // 判断用户是否拥有该级菜单下子菜单的权限，如果子菜单都没有权限，就不显示该级菜单
+          let canViewAccess = []
+          let temp = true
+          forEach(item.children, child => {
+            if (!child.meta || !child.meta.access || !child.meta.access.length) {
+              temp = false
+              return false
+            }
+            canViewAccess = canViewAccess.concat(child.meta.access)
+          })
+          if (temp === false) {
+            res.push(obj)
+          } else if (canViewAccess.length === 0 || (canViewAccess.length > 0 && hasOneOf(canViewAccess, access))) {
+            res.push(obj)
+          }
+        }
+      }
     }
   })
   return res

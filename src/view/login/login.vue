@@ -78,6 +78,7 @@
                 case '0':
                   this.$store.dispatch('getUserInfo', {'param': data.datas.username}).then(res => {
                     Cookies.set('user', JSON.stringify(res.datas))
+                    console.log(JSON.stringify(res.datas))
                     this.$router.push({
                       name: this.$config.homeName
                     })

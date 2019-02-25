@@ -65,6 +65,7 @@ export default {
         switch (res.status) {
           case 200:
             commit('USER_INFO', res.data)
+            commit('setAccess', res.data.datas.access)
             break
           default:
             break
@@ -73,9 +74,6 @@ export default {
       } catch (error) {
         console.log('error: ', error)
       }
-    },
-    getUser({state, commit}, obj) {
-      return 'success'
     },
     async getListData({commit}, obj) {
       try {
@@ -106,7 +104,6 @@ export default {
         console.log('res', res.data)
         switch (res.status) {
           case 200:
-
             break
           default:
             break
@@ -183,6 +180,9 @@ export default {
     ['USER_INFO'](state, payload) {
       console.log('payload.datas.avatar', payload.datas.avatar)
       state.avatorImgPath = payload.datas.avatar
+    },
+    setAccess (state, access) {
+      state.access = access
     },
   }
 }

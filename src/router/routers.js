@@ -1,4 +1,5 @@
 import Main from '@/components/main'
+import {router} from "./index";
 
 /**
  * iview-admin中meta除了原生参数外可配置的参数:
@@ -52,6 +53,7 @@ export default [
     path: '/setting',
     name: 'setting',
     meta: {
+      access: ['1'],
       icon: 'md-cog',
       title: '系统管理'
     },
