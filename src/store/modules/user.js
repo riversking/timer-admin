@@ -62,14 +62,8 @@ export default {
         let res = await postData(`${namespace}/userInfo`, obj).catch(err => {
           commit('GLOBAL_ERR', err, {root: true})
         })
-        console.log('res', res.data)
         switch (res.status) {
           case 200:
-            // commit('setAvator', data.avator)
-            // commit('setUserName', data.name)
-            // commit('setUserId', data.user_id)
-            // commit('setAccess', data.access)
-            // commit('setHasGetInfo', true)
             commit('USER_INFO', res.data)
             break
           default:
@@ -89,7 +83,6 @@ export default {
         let res = await postData(`${namespace}/userPage`, obj).catch(err => {
           commit('GLOBAL_ERR', err, {root: true})
         })
-        console.log('res.datares.datares.data', res)
         switch (res.status) {
           case 200:
             commit(mt.SET_LIST_DATA, res.data)
@@ -129,7 +122,6 @@ export default {
         let res = await postData(`${namespace}/addUser`, obj).catch(err => {
           commit('GLOBAL_ERR', err, {root: true})
         })
-        console.log('res.datares.datares.data', res)
         switch (res.status) {
           case 200:
             break
@@ -148,7 +140,6 @@ export default {
         let res = await postData(`${namespace}/deleteUser`, obj).catch(err => {
           commit('GLOBAL_ERR', err, {root: true})
         })
-        console.log('res.datares.datares.data', res)
         switch (res.status) {
           case 200:
             break
@@ -192,6 +183,6 @@ export default {
     ['USER_INFO'](state, payload) {
       console.log('payload.datas.avatar', payload.datas.avatar)
       state.avatorImgPath = payload.datas.avatar
-    }
+    },
   }
 }

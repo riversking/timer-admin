@@ -46,6 +46,8 @@ import { getNewTagList, getNextRoute, routeEqual } from '@/libs/util'
 import minLogo from '@/assets/images/logo-min.jpg'
 import maxLogo from '@/assets/images/logo.jpg'
 import './main.less'
+import Cookies from 'js-cookie'
+
 export default {
   name: 'Main',
   components: {
@@ -69,6 +71,9 @@ export default {
     ...mapGetters([
       'errorCount'
     ]),
+    // ...mapState({
+    //   userAvator: state => state.user.avatorImgPath,
+    // }),
     tagNavList () {
       return this.$store.state.app.tagNavList
     },
@@ -76,7 +81,7 @@ export default {
       return this.$store.state.app.tagRouter
     },
     userAvator () {
-      return this.$store.state.user.avatorImgPath
+      return JSON.parse(Cookies.get('user')).avatar
     },
     cacheList () {
       return this.tagNavList.length ? this.tagNavList.filter(item => !(item.meta && item.meta.notCache)).map(item => item.name) : []
