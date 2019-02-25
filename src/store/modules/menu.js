@@ -82,6 +82,26 @@ const actions = {
       console.log('error: ', error)
     }
   },
+  async getMenuByUserId ({ commit }, obj) {
+    try {
+      commit(mt.SET_LOADING, true)
+      let res = await postData(`${namespace}/getMenuByUserId`, obj).catch(err => {
+        commit('GLOBAL_ERR', err, { root: true })
+      })
+      switch (res.status) {
+        case 200:
+          commit('MENU_BY_USER_ID', res.data)
+          break
+        default:
+          break
+      }
+      commit(mt.SET_LOADING, false)
+
+      return res.data
+    } catch (error) {
+      console.log('error: ', error)
+    }
+  },
   async add ({ commit }, obj) {
     try {
       commit(mt.SET_LOADING, true)
@@ -176,6 +196,9 @@ const mutations = {
     state.listData = payload.datas
   },
   ['MENU_BY_ROLE_ID'] (state, payload) {
+
+  },
+  ['MENU_BY_USER_ID'] (state, payload) {
 
   }
 }

@@ -36,7 +36,7 @@ export default {
     hasReadErrorPage: false
   },
   getters: {
-    menuList: (state, getters, rootState) => getMenuByRouter(routers, JSON.parse(Cookies.get('user')).access),
+    menuList: (state, getters, rootState) => getMenuByRouter(routers, JSON.parse(Cookies.get('access'))),
     errorCount: state => state.errorList.length
   },
   mutations: {

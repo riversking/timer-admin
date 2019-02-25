@@ -53,7 +53,7 @@ export default [
     path: '/setting',
     name: 'setting',
     meta: {
-      access: ['1'],
+      access: [1000],
       icon: 'md-cog',
       title: '系统管理'
     },
@@ -64,6 +64,7 @@ export default [
         name: 'user',
         meta: {
           icon: 'md-contact',
+          access: [1100],
           title: '用户管理'
         },
         component: () => import('@/view/user/list.vue')
@@ -73,6 +74,7 @@ export default [
         name: 'role',
         meta: {
           icon: 'md-school',
+          access: [1300],
           title: '角色管理'
         },
         component: () => import('@/view/role/list.vue')
@@ -82,6 +84,7 @@ export default [
         name: 'menu',
         meta: {
           icon: 'md-menu',
+          access: [1200],
           title: '菜单管理'
         },
         component: () => import('@/view/menu/list.vue')
@@ -91,6 +94,7 @@ export default [
         name: 'department',
         meta: {
           icon: 'md-apps',
+          access: [1400],
           title: '部门管理'
         },
         component: () => import('@/view/department/list.vue')
