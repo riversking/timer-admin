@@ -79,7 +79,7 @@
                   this.$store.dispatch('getUserInfo', {'param': data.datas.username}).then(res => {
                     Cookies.set('user', JSON.stringify(res.datas))
                     this.$store.dispatch('menu/getMenuByUserId', {'param': res.datas.id}).then(menuRes => {
-                      Cookies.set('access', menuRes.datas)
+                      Cookies.set('access', JSON.stringify(menuRes.datas.access))
                       this.$router.push({
                         name: this.$config.homeName
                       })

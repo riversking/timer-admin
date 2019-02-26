@@ -48,7 +48,7 @@ router.beforeEach((to, from, next) => {
           name: 'login'
         })
       } else {
-        turnTo(to, user.access, next)
+        turnTo(to, JSON.parse(Cookies.get('access')), next)
       }
     }
   }
