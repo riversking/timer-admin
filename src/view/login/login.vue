@@ -74,6 +74,7 @@
                 'password': this.form.password
               }
             }).then(data => {
+              console.log('fsdfs时高时低发给谁', data)
               switch (data.code) {
                 case '0':
                   this.$store.dispatch('getUserInfo', {'param': data.datas.username}).then(res => {

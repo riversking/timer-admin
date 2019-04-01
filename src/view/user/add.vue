@@ -47,7 +47,7 @@
               :before-upload="handleBeforeUpload"
               type="drag"
               :multiple=false
-              action="/file/upload"
+              action="/api/v1/file/upload"
               v-show="!isDisable"
               style="display: inline-block;width:58px;">
               <div style="width: 58px;height:58px;line-height: 58px;">

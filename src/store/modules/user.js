@@ -23,9 +23,9 @@ export default {
         let res = await postData(`${namespace}/login`, obj).catch(err => {
           commit('GLOBAL_ERR', err, {root: true})
         })
-        console.log('res', res.data.datas)
-        switch (res.status) {
-          case 200:
+        console.log('res', res)
+        switch (res.data.code) {
+          case '0':
             setToken(res.data.datas.accessToken)
             commit('SET_ACCESS_TOKEN', res.data.datas.accessToken)
             commit('SET_REFRESH_TOKEN', res.data.datas.refresh_token)
