@@ -3,7 +3,7 @@
     <div>
       <Row :gutter="12">
         <Col span="24">
-          <Table border :columns="roleColumns" :data="listData"></Table>
+          <Tree :data="listData"></Tree>
         </Col>
       </Row>
     </div>
@@ -19,52 +19,28 @@
     },
     data() {
       return {
-        roleColumns: [
-          {
-            title: '序号',
-            key: 'id'
-          },
-          {
-            title: '角色名称',
-            key: 'roleName'
-          },
-          {
-            title: '角色标识',
-            key: 'roleCode'
-          },
-          {
-            title: '角色描述',
-            key: 'roleDesc'
-          },
-          {
-            title: '创建时间',
-            key: 'createTime'
-          },
-          {
-            title: '更新时间',
-            key: 'updateTime'
-          },
-          {
-            title: '操作',
-            key: 'action',
-            align: 'center',
-            width: 250,
-          }
-        ]
+        namespace: 'dept'
       }
     },
     methods: {
-
+      getList () {
+        this.$store.dispatch(`${this.namespace}/getListData`)
+          .then(data => {
+            console.log(data)
+          })
+      }
     },
     computed: {
       ...mapState({
-        listData: state => state.role.listData
+        listData: state => state.dept.listData
+
       })
     },
     mounted() {
 
     },
     created() {
+      this.getList()
     }
   }
 </script>

@@ -7,6 +7,7 @@ import user from './modules/user'
 import app from './modules/app'
 import role from './modules/role'
 import menu from './modules/menu'
+import dept from './modules/dept'
 
 Vue.use(Vuex)
 
@@ -25,6 +26,7 @@ const store = new Vuex.Store({
     app,
     role,
     menu,
+    dept,
     getters
   }
 })
